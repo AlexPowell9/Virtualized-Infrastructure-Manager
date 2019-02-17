@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const scrypt = requrie("scrypt");
 const config = require("../config/config");
 const TOKEN = require(`../${config.MODEL_DIR}/token.js`);
-const scryptParameters = scrypt.paramsSync(0.1);
+const scryptParameters = config.SCRYPT_PARAMS;
 const USER = require(`../${config.MODEL_DIR}/user.js`)
 
 const authenticatePassword(password, user){
@@ -26,7 +26,7 @@ module.exports = {
     authenticate: async (req, res, next){
         let user = await user.findOne({
             username: req.username     
-        });
+        }).exec();
         if(!user)return this.responses.noUser(res);
         if(authenticatePassword(req.password, user)){
             res.locals.user = user;
@@ -35,8 +35,14 @@ module.exports = {
         else return this.responses.incorrectPassword(res);
     },
     generateToken: (req, res, next){
-        token = crypto.RandomBytes(64); 
-
+        let token = {
+            token: crypt.randomBytes(64),
+            expiry: Date.now()+config.TOKEN_EXPIRY,
+            user: res.locals.user._id
+        }
+        let token = await TOKEN.create(token);
+        return responses.sendToken(res, token);
+        
     }
     responses: {
         missingFields: (res, fields) {
@@ -57,6 +63,9 @@ module.exports = {
         },
         incorrectPassword: (res) {
             res.status(400).json("incorrect login");
+        },
+        sendToken: (res, token) {
+            res.status(200).json(token);
         }
     }
 }
