@@ -8,4 +8,4 @@ const loginControllers = require(`../${config.CONTROLLER_LOCATION}/login`);
 router.post("/", [loginControllers.validateInput, 
     loginControllers.authenticate,
     loginControllers.generateToken
-)];
+]);

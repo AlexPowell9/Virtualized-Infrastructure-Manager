@@ -1,4 +1,4 @@
-const mongoose - require('mongoose');
+const mongoose = require('mongoose');
 
 let schema = mongoose.Schema(
     {
@@ -12,3 +12,5 @@ let schema = mongoose.Schema(
         user: String
     }
 )
+
+module.exports = mongoose.Model('event', schema);

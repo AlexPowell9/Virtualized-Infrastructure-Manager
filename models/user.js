@@ -1,4 +1,4 @@
-const mongoose - require('mongoose');
+const mongoose = require('mongoose');
 const config = require('../config/config');
 
 const scryptParams = config.SCRYPT_PARAMS;
