@@ -1,18 +1,18 @@
 module.exports = {
-    validate: (req, res, next) {
+    validate: (req, res, next) => {
         if(!req.username || req.password){
             return this.responses.missingFields(res);
         }
         next();
     },
-    authenticate: (req, res, next){
+    authenticate: (req, res, next) => {
             
     },
-    generateToken: (req, res, next){
+    generateToken: (req, res, next) =>{
              
-    }
+    },
     responses: {
-        missingFields: (res, fields) {
+        missingFields: (res, fields) => {
             if(fields){
                 let message = fields.reduce((acc, curr) => {
                     acc = acc + curr;
@@ -21,7 +21,7 @@ module.exports = {
             } 
             return this.badRequest(res);
         },
-        badRequest: (res, message) {
+        badRequest: (res, message) => {
             message = message || "bad request";
             res.status(400).json(message);
         }
