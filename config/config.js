@@ -10,6 +10,7 @@ module.exports = {
     TOKEN_EXPIRY: 5000,
     SERVER_PORT: 8082,
     CONTROLLER_LOCATION: "controllers",
+    MODEL_DIR: "models",
     //functions
     functions: {
         onServerStart: require("./onStart"),

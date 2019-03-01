@@ -8,4 +8,4 @@ let schema = mongoose.Schema(
     }
 );
 
-module.exports = mongoose.Model('token', schema);
+module.exports = mongoose.model('token', schema);

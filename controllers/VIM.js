@@ -1,8 +1,9 @@
+const config =require("../config/config");
 const VM = require(`../${config.MODEL_DIR}/VM`);
-const VM_TEMPLATES = require(`../${config.MODEL_DIR}/VMTemplates`);
+const VM_TEMPLATES = require(`../${config.MODEL_DIR}/vmTemplates`);
 
 module.exports = {
-    createVM: (req, res, next) => {
+    createVM: async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vmType = await VM_TEMPLATES.findById(body.vmType).exec();
         if(!vmType)return this.responses.templateDNE(res);
@@ -14,10 +15,10 @@ module.exports = {
         createdVM(res, newVM);
         if(next)next();
     },
-    startVM: (req, res, next) => {
+    startVM: async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
-        if(this.addVMEvent(vm, body.type)){
+        if(this.addVMEvent(vm, "start")){
             this.responses.startedVM(res);
             if(next)next();
         }
@@ -26,31 +27,41 @@ module.exports = {
     getEventType: (s) => {
         return s;
     },
-    stopVM: (req, res, next) => {
+    stopVM: async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
         if(!vm)return this.responses.VMDNE(res);
-        if(this.addVMEvent(vm, body.type)){
+        if(this.addVMEvent(vm, "stop")){
             this.responses.stoppedVM(res);
             if(next)next();
         }
         else return this.eventFailed(res, body.type);
     },
-    upgradeVM: (req, res, next) => {
+    upgradeVM: async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
         if(!vm)return this.responses.VMDNE(res);
-        if(this.addVMEvent(vm, body.type)){
+        if(this.addVMEvent(vm, "upgrade")){
             this.responses.upgradedVM(res);
             if(next)next();
         }
         else return this.eventFailed(res, body.type);
     },
-    deleteVM: (req, res, next) => {
+    downgradeVM: async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
         if(!vm)return this.responses.VMDNE(res);
-        if(this.addVMEvent(vm, body.type)){
+        if(this.addVMEvent(vm, "downgrade")){
+            this.responses.downgradedVM(res);
+            if(next)next();
+        }
+        else return this.eventFailed(res, body.type);
+    },
+    deleteVM: async (req, res, next) => {
+        let body = res.locals.body || req.body;
+        let vm = await VM.findById(body.id).exec();
+        if(!vm)return this.responses.VMDNE(res);
+        if(this.addVMEvent(vm, "delete")){
             this.responses.stoppedVM(res);
             if(next)next();
         }
@@ -62,9 +73,10 @@ module.exports = {
             type: this.getEventType(body.type),
             time: Date.now()
         });
+        vm.save();
         return true;
     },
-    getVMUsage: (req, res, next) => {
+    getVMUsage: async (req, res, next) => {
         let vmId = res.locals.params.id || req.params.id;
         let vm = await VM.findById(vmId).exec();
         if(!vm)return this.responses.VMDNE(res);
@@ -72,7 +84,7 @@ module.exports = {
         this.responses.sendUsage(res, usage);
         if(next)next();
     },
-    getAllVmUsage: (req, res, next) => {
+    getAllVmUsage: async (req, res, next) => {
         let vms = await VM.find({user: res.locals.user.id}).exec();
         let usage = [];
         vms.forEach((vm) => {
@@ -80,7 +92,7 @@ module.exports = {
         });
         this.responses.sendUsage(res, usage);
     },
-    getVMCharge(vm, startDate, endDate){
+    getVMCharge: async (vm, startDate, endDate) => {
         let startIndex = vm.events.findIndex((value) => {
             return value.time >= startDate;
         });
@@ -152,7 +164,7 @@ module.exports = {
             res.status(200).json("upgraded VM");
         },
         downgradedVM: (res) => {
-            res.status(200).json("downgrade VM");
+            res.status(200).json("downgraded VM");
         },
         eventFailed: (res, eventType) => {
             res.status(500).json(`${eventType} failed`);

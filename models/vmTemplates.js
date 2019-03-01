@@ -9,4 +9,4 @@ let schema = mongoose.Schema(
     }
 );
 
-module.exports = mongoose.Model("template", schema);
+module.exports = mongoose.model("template", schema);

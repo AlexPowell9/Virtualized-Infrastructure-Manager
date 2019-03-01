@@ -1,6 +1,5 @@
-const jwt = require("./jwt");
 const crypto = require("crypto");
-const scrypt = requrie("scrypt");
+const scrypt = require("scrypt");
 const config = require("../config/config");
 const TOKEN = require(`../${config.MODEL_DIR}/token.js`);
 const scryptParameters = config.SCRYPT_PARAMS;
@@ -34,20 +33,30 @@ module.exports = {
         }
         else return this.responses.incorrectPassword(res);
     },
-    generateToken: (req, res, next) => {
+    generateToken: async (req, res, next) => {
         let token = {
             token: crypt.randomBytes(64),
             expiry: Date.now()+config.TOKEN_EXPIRY,
             user: res.locals.user._id
         }
-        let token = await TOKEN.create(token);
+        token = await TOKEN.create(token);
         return this.responses.sendToken(res, token);
     },
-    registerUser: (req, res , next) => {
+    registerUser: async (req, res , next) => {
         let user = res.locals.body || req.body;
         let newUser = await USER.create(user);
         this.responses.createdUser(res, newUser);
         if(next)next();
+    },
+    authenticateUser: async (req, res, next) => {
+        let token = req.header("authorization").slice(7);
+        let t = await TOKEN.findOne({token: token}).exec();
+        if(t){
+            let user = USER.findById(t.id);
+            res.locals.user = {};
+            res.locals.user.id = user._id;
+        }
+        next();
     },
     responses:  {
         missingFields: (res, fields) => {

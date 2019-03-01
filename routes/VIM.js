@@ -15,6 +15,8 @@ router.post("/upgrade", VIMControllers.upgradeVM);
 
 router.post("/downgrade", VIMControllers.downgradeVM);
 
+router.post("/delete", VIMControllers.deleteVM);
+
 router.get("/usage/vm/:id");
 
 router.get("/usage/user/:id");

@@ -9,4 +9,4 @@ let schema = mongoose.Schema(
         }]
     }
 )
-module.exports = mongoose.Model('vm', schema);
+module.exports = mongoose.model('vm', schema);

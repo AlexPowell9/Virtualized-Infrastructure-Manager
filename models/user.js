@@ -17,4 +17,4 @@ schema.pre('save', (next) => {
     this.password = scrypt.kdfSync(this.password, scryptParams);
     next();
 })
-module.exports = mongoose.Model('login', schema);
+module.exports = mongoose.model('login', schema);
