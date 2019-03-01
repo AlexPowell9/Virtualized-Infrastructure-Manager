@@ -11,7 +11,7 @@ module.exports = {
     SERVER_PORT: 8082,
     CONTROLLER_LOCATION: "controllers",
     MODEL_DIR: "models",
-    dbUri: "localhost:27017/vim",
+    dbUri: "mongodb://localhost:27017/vim",
     //functions
     functions: {
         onServerStart: require("./onStart"),
