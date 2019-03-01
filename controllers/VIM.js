@@ -80,10 +80,17 @@ module.exports = {
         });
         this.responses.sendUsage(res, usage);
     },
-    getVMCharge(vm){
+    getVMCharge(vm, startDate, endDate){
+        let startIndex = vm.events.findIndex((value) => {
+            return value.time >= startDate;
+        });
+        let endIndex = vm.events.findIndex((value) => {
+            return value.time <= endDate;
+        });
+        let events = vm.events.slice(startIndex, endIndex);
         vmTemplates = await VM_TEMPLATES.find().exec();
         let rates = {};
-        let lastStart;
+        let lastStart = startDate;
         let totalTime = {};
         let vmConfigs = [];
         vmTemplates.sort((a, b) => {
@@ -94,7 +101,8 @@ module.exports = {
             vmConfigs.push(element);
         });
         let vmConfigsIndex = vmConfigs.indexOf(vm.type);
-        vm.events.forEach(element => {
+        events.push({time: endDate});
+        events.forEach(element => {
             if(!totalTime[vmConfigs[vmConfigsIndex]])totalTime[vmConfigs[vmConfigsIndex]]=0;
             if(event.type === "start"){
                 lastStart = element.time;

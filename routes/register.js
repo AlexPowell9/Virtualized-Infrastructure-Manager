@@ -5,10 +5,6 @@ let router = express.Router();
 
 const loginControllers = require(`../${config.CONTROLLER_LOCATION}/login`);
 
-router.post("/", [
-    loginControllers.validateInput, 
-    loginControllers.authenticate,
-    loginControllers.generateToken
-]);
+router.post("/", loginControllers.registerUser);
 
 module.exports = router;
