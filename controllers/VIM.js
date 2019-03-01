@@ -64,14 +64,35 @@ module.exports = {
         });
         return true;
     },
-    getVMCharge: (req, res, next) => {
+    getVMUsage: (req, res, next) => {
         let vmId = res.locals.params.id || req.params.id;
         let vm = await VM.findById(vmId).exec();
-        if(!vm)return this.VMDNE(res);
-        let rates = {};//TODO - get rate
+        if(!vm)return this.responses.VMDNE(res);
+        let vmCharges = await getVMCharge(vm);
+        this.responses.sendUsage(res, usage);
+        if(next)next();
+    },
+    getAllVmUsage: (req, res, next) => {
+        let vms = await VM.find({user: res.locals.user.id}).exec();
+        let usage = [];
+        vms.forEach((vm) => {
+            usage.push(getVMCharge(vm));
+        });
+        this.responses.sendUsage(res, usage);
+    },
+    getVMCharge(vm){
+        vmTemplates = await VM_TEMPLATES.find().exec();
+        let rates = {};
         let lastStart;
         let totalTime = {};
         let vmConfigs = [];
+        vmTemplates.sort((a, b) => {
+            return a.rate -b.rate;
+        });
+        vmTemplates.forEach((element) => {
+            rates[element._id] = element.rate;
+            vmConfigs.push(element);
+        });
         let vmConfigsIndex = vmConfigs.indexOf(vm.type);
         vm.events.forEach(element => {
             if(!totalTime[vmConfigs[vmConfigsIndex]])totalTime[vmConfigs[vmConfigsIndex]]=0;
@@ -95,7 +116,13 @@ module.exports = {
                 totalTime[vmConfigs[vmConfigsIndex]]+=element.time-lastStart;
             }
         });
-        return totalTime;//TODO - this should be a res response
+        let rateAndTime = {};
+        rateAndTime.rate ={};
+        Object.entries(totalTime).forEach((value) => {
+            rateAndTime.rate[value[0]] = rates[value[0]];
+        });
+        rateAndTime.time = totalTime;
+        return rateAndTime;
     },
     responses: {
         templateDNE: (res) => {
@@ -121,6 +148,9 @@ module.exports = {
         },
         eventFailed: (res, eventType) => {
             res.status(500).json(`${eventType} failed`);
+        },
+        sendUsage: (res, usage) => {
+            res.status(200).json(usage);
         }
     }
 }
