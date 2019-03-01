@@ -49,14 +49,20 @@ module.exports = {
         if(next)next();
     },
     authenticateUser: async (req, res, next) => {
-        let token = req.header("authorization").slice(7);
-        let t = await TOKEN.findOne({token: token}).exec();
-        if(t){
-            let user = USER.findById(t.id);
-            res.locals.user = {};
-            res.locals.user.id = user._id;
+        try{ 
+            let token = req.header("authorization").slice(7);
+            let t = await TOKEN.findOne({token: token}).exec();
+            if(t){
+                let user = USER.findById(t.id);
+                res.locals.user = {};
+                res.locals.user.id = user._id;
+            }
+            next()
         }
-        next();
+        catch(e){
+            next();
+        }
+        
     },
     responses:  {
         missingFields: (res, fields) => {
