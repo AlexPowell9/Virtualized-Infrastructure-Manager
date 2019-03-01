@@ -9,6 +9,7 @@ module.exports = {
     SETUP_TEST_ENV_LOCATION: "testSetup",
     TOKEN_EXPIRY: 5000,
     SERVER_PORT: 8082,
+    CONTROLLER_LOCATION: "controllers",
     //functions
     functions: {
         onServerStart: require("./onStart"),
