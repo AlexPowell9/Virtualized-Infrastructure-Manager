@@ -11,7 +11,7 @@ let schema = mongoose.Schema(
 );
 
 schema.pre('save', (next) => {
-    if(!isModified('password')) {
+    if(!this.isModified('password')) {
         return next()     
     }   
     this.password = scrypt.kdfSync(this.password, scryptParams);
