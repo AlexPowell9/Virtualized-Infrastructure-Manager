@@ -19,7 +19,8 @@ let start = async ()=>{
         limit: '10mb',
         extended: true
     }));
-    app.use("/api", require(`./${config.ROUTES_DIR}/index`))
+    app.use("/api", require(`./${config.ROUTES_DIR}/index`));
+    app.use(express.static('public'));
     app.listen(config.SERVER_PORT, config.functions.onServerStart);
 }
 start();
