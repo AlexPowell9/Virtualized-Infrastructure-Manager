@@ -8,8 +8,9 @@ const USER = require(`../${config.MODEL_DIR}/user.js`);
 const authenticatePassword = (password, user) => {
     try {
         if (!user || !password) return false
-        return scrypt.verifyKdfSync(password, user.password);
+        return scrypt.verifyKdfSync(new Buffer(user.password, "base64"), password);
     } catch (err) {
+        console.log(err);
         return err;
     }
 }
@@ -65,7 +66,7 @@ module.exports = {
     },
     generateToken: async (req, res, next) => {
         let token = {
-            token: crypto.randomBytes(64),
+            token: crypto.randomBytes(64).toString("base64"),
             expiry: Date.now() + config.TOKEN_EXPIRY,
             user: res.locals.user._id
         }

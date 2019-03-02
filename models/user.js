@@ -14,7 +14,7 @@ schema.pre('save', function(next){
         return next();
     }
     try {
-        this.password = scrypt.kdfSync(this.password, scryptParams);
+        this.password = scrypt.kdfSync(this.password, scryptParams).toString("base64");
         next();
     } catch (err) {
         next(err);

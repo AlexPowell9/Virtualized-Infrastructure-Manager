@@ -29,18 +29,52 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link" href="#">Features</a>
-                <a class="nav-item nav-link" href="#">Pricing</a>
-                <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                <a class="nav-item nav-link active">Group One Cloud Platform</a>
             </div>
         </div>
-        <div class="form-inline">
-            <input class="form-control mr-sm-2" type="email" placeholder="Username" aria-label="Search">
-            <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Search">
+        <form class="form-inline" id="loginForm">
+            <div class="mr-sm-2 btn btn-danger d-none" data-toggle="tooltip" data-placement="bottom" title="Invalid Credentials" id="loginInvalid"><i class="fas fa-user-times"></i></div>
+            <input class="form-control mr-sm-2" type="text" placeholder="Username" id="loginUsername">
+            <input class="form-control mr-sm-2" type="password" placeholder="Password" id="loginPassword">
             <button class="btn btn-primary my-2 my-sm-0" type="submit" onclick="login()">Login</button>
-        </div>
+        </form>
     </nav>
+    <div class="container-fluid h-75">
+        <div class="row justify-content-center h-100">
+            <div class="col-4 align-self-center">
+                <div class="card">
+                    <div class="card-header bg-dark text-light">
+                        Create Account
+                    </div>
+                    <div class="card-body bg-light">
+                        <form>
+                            <div class="form-group">
+                                <label for="registerUsername">Username</label>
+                                <input type="text" class="form-control" id="registerUsername" placeholder="Username">
+                            </div>
+                            <div class="form-group">
+                                <label for="registerPassword">Password</label>
+                                <input type="password" class="form-control" id="registerPassword" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <div class="alert alert-success d-none" role="alert" id="successAlert">
+                                    Successfully Created Account!
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="alert alert-danger d-none" role="alert" id="errorAlert">
+                                    There was an error creating the account.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary my-2 my-sm-0 float-right" type="submit" onclick="register()">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/index.js"></script>
 </body>
 
