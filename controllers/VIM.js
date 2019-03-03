@@ -17,6 +17,7 @@ let createVM =  async (req, res, next) => {
 let startVM = async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
+        if(!vm)return responses.VMDNE(res);
         if(addVMEvent(vm, "start")){
             responses.startedVM(res);
             if(next)next();
@@ -66,10 +67,9 @@ let deleteVM = async (req, res, next) => {
         }
         else return responses.eventFailed(res, body.type);
     }
-let addVMEvent = (vm) => {
-        if(!vm)return responses.VMDNE(res);
+let addVMEvent = (vm, type) => {
         vm.events.push({
-            type: getEventType(body.type),
+            type: getEventType(type),
             time: Date.now()
         });
         vm.save();
