@@ -17,8 +17,8 @@ router.post("/downgrade", VIMControllers.downgradeVM);
 
 router.post("/delete", VIMControllers.deleteVM);
 
-router.get("/usage/vm/:id");
+router.get("/usage/vm/:id", VIMControllers.getVmUsage);
 
-router.get("/usage/user/:id");
+router.get("/usage/user/:id", VIMControllers.getAllVmUsage);
 
 module.exports = router;

@@ -76,7 +76,7 @@ module.exports = {
         vm.save();
         return true;
     },
-    getVMUsage: async (req, res, next) => {
+    getVmUsage: async (req, res, next) => {
         let vmId = res.locals.params.id || req.params.id;
         let vm = await VM.findById(vmId).exec();
         if(!vm)return this.responses.VMDNE(res);
