@@ -81,7 +81,7 @@ module.exports = {
     },
     authenticateUser: async (req, res, next) => {
         try {
-            let token = req.header("authorization").slice(7);
+            let token = req.header("Authorization").slice(7);
             let t = await TOKEN.findOne({
                 token: token
             }).exec();
