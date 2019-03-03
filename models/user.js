@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const config = require('../config/config');
-
+const scrypt = require("scrypt");
 const scryptParams = config.SCRYPT_PARAMS;
 
-let schema = mongoose.Schema(
+let schema = new mongoose.Schema(
     {
         username: String,
         password: String
