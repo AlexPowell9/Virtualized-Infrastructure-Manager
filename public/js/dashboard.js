@@ -343,6 +343,60 @@ function DowngradeVM() {
     });
 }
 
+/*
+ * Get VM Usage Function
+ */
+function GetUsageVM() {
+    let params = {};
+    $.ajax({
+        type: 'POST',
+        url: "http://127.0.0.1:8082/api/VIM/usage/vm/"+vmArray[selected]._id,
+        data: params,
+        dataType: "text",
+        //Attach auth header
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+        },
+        //If successful, show success
+        success: function (resultData) {
+            resultData = JSON.parse(resultData);
+            UpdateVMUsage(resultData);
+        },
+        //If unsuccessful show error
+        error: function (data) {
+            console.log("Downgrade VM Error");
+            console.log(data);
+        }
+    });
+}
+
+/*
+ * Get Total Charges Function
+ */
+function GetTotalCharges() {
+    let params = {};
+    $.ajax({
+        type: 'POST',
+        url: "http://127.0.0.1:8082/api/VIM/usage/user/"+userID,
+        data: params,
+        dataType: "text",
+        //Attach auth header
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+        },
+        //If successful, show success
+        success: function (resultData) {
+            resultData = JSON.parse(resultData);
+            UpdateTotalCharges(resultData);
+        },
+        //If unsuccessful show error
+        error: function (data) {
+            console.log("Downgrade VM Error");
+            console.log(data);
+        }
+    });
+}
+
 function Select(index) {
     //Select the list element
     selected = index;
@@ -355,7 +409,6 @@ function Select(index) {
     }
     //Add active tags
     vmList.childNodes[selected].classList.add("active");
-    console.log(vmArray);
     //Fill out details section
     document.getElementById("detailsID").innerHTML = "" + vmArray[selected]._id;
     document.getElementById("detailsName").innerHTML = "" + vmTemplates[vmArray[selected].typeIndex].name;
@@ -364,21 +417,69 @@ function Select(index) {
 
     //Figure out status of VM
     document.getElementById("detailsStatus").innerHTML = "Stopped";
+    ShowStartStop(true);
     if (vmArray[selected].events.length > 0) {
         for (let i = vmArray[selected].events.length - 1; i >= 0; i--) {
             if (vmArray[selected].events[i].type == "start") {
                 document.getElementById("detailsStatus").innerHTML = "Running";
+                ShowStartStop();
                 break;
             } else if (vmArray[selected].events[i].type == "stop") {
                 document.getElementById("detailsStatus").innerHTML = "Stopped";
+                ShowStartStop(true);
                 break;
             }
         }
     }
 
-    document.getElementById("detailsUsage").innerHTML = "$" + vmTemplates[vmArray[selected].typeIndex].rate + "/min";
+    //Display correct upgrade downgrade combo.
+    ShowUpgradeDowngrade();
+    GetUsageVM();
+    GetTotalCharges();
 }
 
+/*
+* Update VM Usage Display
+*/
+function UpdateVMUsage(usage){
+    document.getElementById("detailsUsage").innerHTML =  usage + " mins";
+}
+
+/*
+* Update Total Charges Display
+*/
+function UpdateTotalCharges(totalCharges){
+    document.getElementById("detailsUsage").innerHTML =  "$" + totalCharges;
+}
+
+/*
+ * Start and Stop should not be available at the same time. This will mess up usage calculations on the server because no validation because spaghetti because school stressy messy.
+ */
+function ShowStartStop(showStart) {
+    if (showStart) {
+        document.getElementById("controlsStart").classList.remove("d-none");
+        document.getElementById("controlsStop").classList.add("d-none");
+    } else {
+        document.getElementById("controlsStart").classList.add("d-none");
+        document.getElementById("controlsStop").classList.remove("d-none");
+    }
+}
+
+/*
+ * Function to only show valid upgrade/downgrade buttons assuming 3 templates. Love hardcoding stuff. 
+ */
+function ShowUpgradeDowngrade() {
+    if (vmArray[selected].typeIndex == 0) {
+        document.getElementById("controlsUpgrade").classList.remove("d-none");
+        document.getElementById("controlsDowngrade").classList.add("d-none");
+    } else if (vmArray[selected].typeIndex == 2) {
+        document.getElementById("controlsUpgrade").classList.add("d-none");
+        document.getElementById("controlsDowngrade").classList.remove("d-none");
+    } else {
+        document.getElementById("controlsUpgrade").classList.remove("d-none");
+        document.getElementById("controlsDowngrade").classList.remove("d-none");
+    }
+}
 
 /*
  * Logout function that take user back to homepage.

@@ -105,16 +105,16 @@
                         <button type="button" class="btn btn-danger" onclick="DeleteVM()">Delete VM</button>
                         <hr />
                         <!--Status-->
-                        <button type="button" class="btn btn-success" onclick="StartVM()">Start VM</button>
-                        <button type="button" class="btn btn-danger" onclick="StopVM()">Stop VM</button>
+                        <button type="button" class="btn btn-success" onclick="StartVM()" id="controlsStart">Start VM</button>
+                        <button type="button" class="btn btn-danger" onclick="StopVM()" id="controlsStop">Stop VM</button>
                         <hr />
                         <!--Type-->
-                        <button type="button" class="btn btn-secondary" onclick="UpgradeVM()">Upgrade</button>
-                        <button type="button" class="btn btn-secondary" onclick="DowngradeVM()">Downgrade</button>
+                        <button type="button" class="btn btn-secondary" onclick="UpgradeVM()" id="controlsUpgrade">Upgrade</button>
+                        <button type="button" class="btn btn-secondary" onclick="DowngradeVM()" id="controlsDowngrade">Downgrade</button>
                         <hr />
                         <!--Usage-->
-                        <button type="button" class="btn btn-info">Update Usage</button>
-                        <button type="button" class="btn btn-info">Update Total Charges</button>
+                        <button type="button" class="btn btn-info" onclick="GetUsageVM()">Update Usage</button>
+                        <button type="button" class="btn btn-info" onclick="GetTotalCharges()">Update Total Charges</button>
                     </div>
                 </div>
             </div>
