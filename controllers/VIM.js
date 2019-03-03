@@ -6,7 +6,7 @@ let createVM =  async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vmType = await VM_TEMPLATES.findById(body.vmType).exec();
         if(!vmType)return responses.templateDNE(res);
-        let newVM = VM.create({
+        let newVM = await VM.create({
             type: vmType._id,
             user: res.locals.user.id,
             events: []
@@ -44,7 +44,7 @@ let upgradeVM = async (req, res, next) => {
             responses.upgradedVM(res);
             if(next)next();
         }
-        else return eventFailed(res, body.type);
+        else return responses.eventFailed(res, body.type);
     }
 let downgradeVM = async (req, res, next) => {
         let body = res.locals.body || req.body;
@@ -54,7 +54,7 @@ let downgradeVM = async (req, res, next) => {
             responses.downgradedVM(res);
             if(next)next();
         }
-        else return eventFailed(res, body.type);
+        else return responses.eventFailed(res, body.type);
     }
 let deleteVM = async (req, res, next) => {
         let body = res.locals.body || req.body;
@@ -64,7 +64,7 @@ let deleteVM = async (req, res, next) => {
             responses.stoppedVM(res);
             if(next)next();
         }
-        else return eventFailed(res, body.type);
+        else return responses.eventFailed(res, body.type);
     }
 let addVMEvent = (vm) => {
         if(!vm)return responses.VMDNE(res);
