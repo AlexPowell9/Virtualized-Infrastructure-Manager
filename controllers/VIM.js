@@ -2,11 +2,10 @@ const config =require("../config/config");
 const VM = require(`../${config.MODEL_DIR}/VM`);
 const VM_TEMPLATES = require(`../${config.MODEL_DIR}/vmTemplates`);
 
-module.exports = {
-    createVM: async (req, res, next) => {
+let createVM =  async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vmType = await VM_TEMPLATES.findById(body.vmType).exec();
-        if(!vmType)return this.responses.templateDNE(res);
+        if(!vmType)return responses.templateDNE(res);
         let newVM = VM.create({
             type: vmType._id,
             user: res.locals.user.id,
@@ -14,85 +13,85 @@ module.exports = {
         });
         createdVM(res, newVM);
         if(next)next();
-    },
-    startVM: async (req, res, next) => {
+    };
+let startVM = async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
-        if(this.addVMEvent(vm, "start")){
-            this.responses.startedVM(res);
+        if(addVMEvent(vm, "start")){
+            responses.startedVM(res);
             if(next)next();
         }
-        else return this.eventFailed(res, body.type);
-    },
-    getEventType: (s) => {
+        else return eventFailed(res, body.type);
+    }
+let getEventType = (s) => {
         return s;
-    },
-    stopVM: async (req, res, next) => {
+    }
+let stopVM = async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
-        if(!vm)return this.responses.VMDNE(res);
-        if(this.addVMEvent(vm, "stop")){
-            this.responses.stoppedVM(res);
+        if(!vm)return responses.VMDNE(res);
+        if(addVMEvent(vm, "stop")){
+            responses.stoppedVM(res);
             if(next)next();
         }
-        else return this.eventFailed(res, body.type);
-    },
-    upgradeVM: async (req, res, next) => {
+        else return eventFailed(res, body.type);
+    }
+let upgradeVM = async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
-        if(!vm)return this.responses.VMDNE(res);
-        if(this.addVMEvent(vm, "upgrade")){
-            this.responses.upgradedVM(res);
+        if(!vm)return responses.VMDNE(res);
+        if(addVMEvent(vm, "upgrade")){
+            responses.upgradedVM(res);
             if(next)next();
         }
-        else return this.eventFailed(res, body.type);
-    },
-    downgradeVM: async (req, res, next) => {
+        else return eventFailed(res, body.type);
+    }
+let downgradeVM = async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
-        if(!vm)return this.responses.VMDNE(res);
-        if(this.addVMEvent(vm, "downgrade")){
-            this.responses.downgradedVM(res);
+        if(!vm)return responses.VMDNE(res);
+        if(addVMEvent(vm, "downgrade")){
+            responses.downgradedVM(res);
             if(next)next();
         }
-        else return this.eventFailed(res, body.type);
-    },
-    deleteVM: async (req, res, next) => {
+        else return eventFailed(res, body.type);
+    }
+let deleteVM = async (req, res, next) => {
         let body = res.locals.body || req.body;
         let vm = await VM.findById(body.id).exec();
-        if(!vm)return this.responses.VMDNE(res);
-        if(this.addVMEvent(vm, "delete")){
-            this.responses.stoppedVM(res);
+        if(!vm)return responses.VMDNE(res);
+        if(addVMEvent(vm, "delete")){
+            responses.stoppedVM(res);
             if(next)next();
         }
-        else return this.eventFailed(res, body.type);
-    },
-    addVMEvent: (vm) => {
-        if(!vm)return this.responses.VMDNE(res);
+        else return eventFailed(res, body.type);
+    }
+let addVMEvent = (vm) => {
+        if(!vm)return responses.VMDNE(res);
         vm.events.push({
-            type: this.getEventType(body.type),
+            type: getEventType(body.type),
             time: Date.now()
         });
         vm.save();
         return true;
-    },
-    getVmUsage: async (req, res, next) => {
+    }
+let getVmUsage = async (req, res, next) => {
         let vmId = res.locals.params.id || req.params.id;
         let vm = await VM.findById(vmId).exec();
-        if(!vm)return this.responses.VMDNE(res);
+        if(!vm)return responses.VMDNE(res);
         let vmCharges = await getVMCharge(vm);
-        this.responses.sendUsage(res, usage);
+        responses.sendUsage(res, usage);
         if(next)next();
-    },
-    getAllVmUsage: async (req, res, next) => {
+    }
+let getAllVmUsage = async (req, res, next) => {
         let vms = await VM.find({user: res.locals.user.id}).exec();
         let usage = [];
         vms.forEach((vm) => {
             usage.push(getVMCharge(vm));
         });
-        this.responses.sendUsage(res, usage);
-    },
-    getVMCharge: async (vm, startDate, endDate) => {
+        responses.sendUsage(res, usage);
+    }
+let getVMCharge = async (vm, startDate, endDate) => {
         let startIndex = vm.events.findIndex((value) => {
             return value.time >= startDate;
         });
@@ -143,8 +142,8 @@ module.exports = {
         });
         rateAndTime.time = totalTime;
         return rateAndTime;
-    },
-    responses: {
+    }
+let responses = {
         templateDNE: (res) => {
             res.status(404).json("VM template does not exist");
         },
@@ -173,4 +172,14 @@ module.exports = {
             res.status(200).json(usage);
         }
     }
-}
+
+    module.exports = {
+        createVM: createVM,
+        startVM: startVM,
+        stopVM: stopVM,
+        upgradeVM: upgradeVM,
+        downgradeVM: downgradeVM,
+        deleteVM: deleteVM,
+        getVmUsage: getVmUsage,
+        getAllVmUsage: getAllVmUsage
+    }
