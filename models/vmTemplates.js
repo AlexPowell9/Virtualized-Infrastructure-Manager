@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 let schema = new mongoose.Schema(
     {
         name:String,
-        descriptions: String,
+        description: String,
         rate: Number
     }
 );
