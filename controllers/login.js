@@ -6,89 +6,93 @@ const scryptParameters = config.SCRYPT_PARAMS;
 const USER = require(`../${config.MODEL_DIR}/user.js`);
 
 const authenticatePassword = (password, user) => {
-    try{
-        if(!user || !password)return false
+    try {
+        if (!user || !password) return false
         return scrypt.verifyKdfSync(password, user.password);
-    }
-    catch(err) {
+    } catch (err) {
         return err;
     }
 }
 
+const badRequest = (res, message) => {
+    message = message || "bad request";
+    res.status(400).json(message);
+} 
+
+const missingFields = (res, fields) => {
+    if (fields) {
+        let message = fields.reduce((acc, curr) => {
+            acc = acc + curr;
+        }, "missing fields: ");
+        return badRequest(res, message);
+    }
+    return badRequest(res);
+}
+
+const noUser = (res) => {
+    res.status(400).json("user does not exist");
+}
+
+const incorrectPassword = (res) => {
+    res.status(400).json("incorrect login");
+}
+
+const sendToken = (res, token) => {
+    res.status(200).json(token);
+}
+
+const createdUser = (res, user) => {
+    res.status(201).json(user);
+}
+
+
 module.exports = {
     validate: (req, res, next) => {
-        if(!req.username || req.password){
-            return this.responses.missingFields(res);
+        if (!req.body.username || !req.body.password) {
+            return missingFields(res);
         }
         next();
     },
     authenticate: async (req, res, next) => {
-        let user = await user.findOne({
-            username: req.username     
+        let user = await USER.findOne({
+            username: req.body.username
         }).exec();
-        if(!user)return this.responses.noUser(res);
-        if(authenticatePassword(req.password, user)){
+        if (!user) return noUser(res);
+        if (authenticatePassword(req.body.password, user)) {
             res.locals.user = user;
             next();
-        }
-        else return this.responses.incorrectPassword(res);
+        } else return incorrectPassword(res);
     },
     generateToken: async (req, res, next) => {
         let token = {
-            token: crypt.randomBytes(64),
-            expiry: Date.now()+config.TOKEN_EXPIRY,
+            token: crypto.randomBytes(64),
+            expiry: Date.now() + config.TOKEN_EXPIRY,
             user: res.locals.user._id
         }
         token = await TOKEN.create(token);
-        return this.responses.sendToken(res, token);
+        return sendToken(res, token);
     },
-    registerUser: async (req, res , next) => {
+    registerUser: async (req, res, next) => {
         let user = res.locals.body || req.body;
         let newUser = await USER.create(user);
-        this.responses.createdUser(res, newUser);
-        if(next)next();
+        createdUser(res, newUser);
+        if (next) next();
     },
     authenticateUser: async (req, res, next) => {
-        try{ 
+        try {
             let token = req.header("authorization").slice(7);
-            let t = await TOKEN.findOne({token: token}).exec();
-            if(t){
+            let t = await TOKEN.findOne({
+                token: token
+            }).exec();
+            if (t) {
                 let user = USER.findById(t.id);
                 res.locals.user = {};
                 res.locals.user.id = user._id;
             }
             next()
-        }
-        catch(e){
+        } catch (e) {
             next();
         }
-        
-    },
-    responses:  {
-        missingFields: (res, fields) => {
-            if(fields){
-                let message = fields.reduce((acc, curr) => {
-                    acc = acc + curr;
-                }, "missing fields: ");
-                return this.badRequest(res, message);
-            } 
-            return this.badRequest(res);
-        },
-        badRequest: (res, message) => {
-            message = message || "bad request";
-            res.status(400).json(message);
-        },
-        noUser: (res) => {
-            res.status(400).json("user does not exist");
-        },
-        incorrectPassword: (res) => {
-            res.status(400).json("incorrect login");
-        },
-        sendToken: (res, token) => {
-            res.status(200).json(token);
-        },
-        createdUser: (req, user) => {
-            res.status(201).json(user);
-        }
+
     }
 };
