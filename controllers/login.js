@@ -88,7 +88,7 @@ module.exports = {
             if (t) {
                 let user = await USER.findById(t.id).exec();
                 res.locals.user = {};
-                res.locals.user.id = user.id;
+                res.locals.user.id = user._id;
             }
             next()
         } catch (e) {
