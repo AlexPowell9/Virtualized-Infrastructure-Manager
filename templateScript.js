@@ -22,7 +22,7 @@ let createVms = async () => {
     await VM_TEMPLATES.create({
         description: "128 virtual processor cores, 512 GB of virtual RAM, 40 GB of storage space in the root file system-",
         rate: 0.15,
-        name: "Ultra-Large Virtual Server Instanc"
+        name: "Ultra-Large Virtual Server Instance"
     });
     process.exit(0);
 }
