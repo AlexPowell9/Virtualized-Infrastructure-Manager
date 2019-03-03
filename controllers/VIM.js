@@ -9,7 +9,7 @@ module.exports = {
         if(!vmType)return this.responses.templateDNE(res);
         let newVM = VM.create({
             type: vmType._id,
-            user: res.locals.user._id,
+            user: res.locals.user.id,
             events: []
         });
         createdVM(res, newVM);
