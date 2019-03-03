@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 const config = require('../config/config');
-const scrypt = require('scrypt');
-
+const scrypt = require("scrypt");
 const scryptParams = config.SCRYPT_PARAMS;
 
-let schema = mongoose.Schema({
-    username: String,
-    password: String
+let schema = new mongoose.Schema({
+        username: String,
+        password: String
 });
 
 schema.pre('save', function(next){
@@ -18,6 +17,7 @@ schema.pre('save', function(next){
         next();
     } catch (err) {
         next(err);
+
     }
 
 })
