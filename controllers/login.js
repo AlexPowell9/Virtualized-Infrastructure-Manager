@@ -86,7 +86,7 @@ module.exports = {
                 token: token
             }).exec();
             if (t) {
-                let user = await USER.findById(t.id).exec();
+                let user = await USER.findById(t.user).exec();
                 res.locals.user = {};
                 res.locals.user.id = user._id;
             }
