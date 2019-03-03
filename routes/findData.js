@@ -6,9 +6,9 @@ const USER = require(`../${config.MODEL_DIR}/user`);
 
 let router = express.Router();
 
-router.get("/vm:id", async (req, res, next) => {
+router.get("/vm/:id", async (req, res, next) => {
     let vm = await VM.findById(req.params.id).exec();
-    if(!vm || vm.user != res.locals.user.id)return res.status(401).json("unauthorized");
+    if(!vm || !res.locals.user || vm.user != res.locals.user.id)return res.status(401).json("unauthorized");
     res.status(200).json(vm);
 });
 
@@ -24,6 +24,7 @@ router.get("/template", async (req, res, next) => {
 });
 
 router.get("/user/vm" , async (req, res, next) => {
+    if(!res.locals.user || !res.locals.user.id)return res.status(401).json("unauthorized");
     let vms = await VM.find({user: res.locals.user.id});
     res.status(200).json(vms);
 })

@@ -6,7 +6,8 @@ let schema = new mongoose.Schema(
         user: String,
         events: [{
             type: event
-        }]
+        }],
+        deleted: Boolean
     }
 )
 module.exports = mongoose.model('vm', schema);
