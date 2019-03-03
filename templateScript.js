@@ -24,5 +24,7 @@ let createVms = async () => {
         rate: 0.15,
         name: "Ultra-Large Virtual Server Instanc"
     });
-    exit(0);
+    process.exit(0);
 }
+
+createVms();
