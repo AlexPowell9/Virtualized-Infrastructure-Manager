@@ -11,7 +11,7 @@ let createVM =  async (req, res, next) => {
             user: res.locals.user.id,
             events: []
         });
-        createdVM(res, newVM);
+        responses.createdVM(res, newVM);
         if(next)next();
     };
 let startVM = async (req, res, next) => {
@@ -21,7 +21,7 @@ let startVM = async (req, res, next) => {
             responses.startedVM(res);
             if(next)next();
         }
-        else return eventFailed(res, body.type);
+        else return responses.eventFailed(res, body.type);
     }
 let getEventType = (s) => {
         return s;

@@ -68,7 +68,7 @@ module.exports = {
         let token = {
             token: crypto.randomBytes(64).toString("base64"),
             expiry: Date.now() + config.TOKEN_EXPIRY,
-            user: res.locals.user._id
+            user: res.locals.user.id
         }
         token = await TOKEN.create(token);
         return sendToken(res, token);
@@ -88,7 +88,7 @@ module.exports = {
             if (t) {
                 let user = USER.findById(t.id);
                 res.locals.user = {};
-                res.locals.user.id = user._id;
+                res.locals.user.id = user.id;
             }
             next()
         } catch (e) {
