@@ -33,10 +33,93 @@
             </div>
         </div>
         <div class="form-inline">
-            <div class="btn btn-light-outline text-white">Name</div>
+            <div class="btn btn-light-outline text-white" id="navbarUsername">Name</div>
             <button class="btn btn-primary my-2 my-sm-0" type="submit" onclick="logout()">Logout</button>
         </div>
     </nav>
+    <div class="container-fluid h-75 w-100 mt-5">
+        <div class="row justify-content-center h-100">
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-header text-center">
+                        VM List
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group" id="listVM">
+                            <!--This is where the VM items get spawned-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        VM Details
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <strong>ID: </strong><span id="detailsID"></span>
+                        </p>
+                        <p>
+                            <strong>Name: </strong><span id="detailsName"></span>
+                        </p>
+                        <p>
+                            <strong>Description: </strong><span id="detailsDescription"></span>
+                        </p>
+                        <p>
+                            <strong>Rate: </strong><span id="detailsRate"></span>
+                        </p>
+                        <p>
+                            <strong>Current Status: </strong><span id="detailsStatus"></span>
+                        </p>
+                        <p>
+                            <strong>Usage: </strong><span id="detailsUsage"></span>
+                        </p>
+                        <hr />
+                        <p>
+                            <strong>Total Charges: </strong><span id="detailsUsage"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-2">
+                <div class="card">
+                    <div class="card-header text-center">
+                        VM Controls
+                    </div>
+                    <div class="card-body text-center">
+                        <!--Existance-->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                Create VM
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:CreateVM(0);">Basic VM</a>
+                                <a class="dropdown-item" href="javascript:CreateVM(1);">Large VM</a>
+                                <a class="dropdown-item" href="javascript:CreateVM(2);">Ultra Large VM</a>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-danger" onclick="DeleteVM()">Delete VM</button>
+                        <hr />
+                        <!--Status-->
+                        <button type="button" class="btn btn-success" onclick="StartVM()">Start VM</button>
+                        <button type="button" class="btn btn-danger" onclick="StopVM()">Stop VM</button>
+                        <hr />
+                        <!--Type-->
+                        <button type="button" class="btn btn-secondary" onclick="UpgradeVM()">Upgrade</button>
+                        <button type="button" class="btn btn-secondary" onclick="DowngradeVM()">Downgrade</button>
+                        <hr />
+                        <!--Usage-->
+                        <button type="button" class="btn btn-info">Update Usage</button>
+                        <button type="button" class="btn btn-info">Update Total Charges</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/dashboard.js"></script>
 </body>
 

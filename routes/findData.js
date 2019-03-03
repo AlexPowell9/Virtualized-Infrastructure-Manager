@@ -13,7 +13,7 @@ router.get("/vm/:id", async (req, res, next) => {
 });
 
 router.get("/template/:id", async (req, res, next) => {
-    let template = await VM_TEMPLATES.findById(id).exec();
+    let template = await VM_TEMPLATES.findById(req.params.id).exec();
     if(!template)return res.status(404).json("Template not found");
     res.status(200).json(template);
 });
