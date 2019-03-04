@@ -410,6 +410,7 @@ function Select(index) {
     //Add active tags
     vmList.childNodes[selected].classList.add("active");
     //Fill out details section
+    document.getElementById("vmdetails").style.display = "block";
     document.getElementById("detailsID").innerHTML = "" + vmArray[selected]._id;
     document.getElementById("detailsName").innerHTML = "" + vmTemplates[vmArray[selected].typeIndex].name;
     document.getElementById("detailsDescription").innerHTML = "" + vmTemplates[vmArray[selected].typeIndex].description;
