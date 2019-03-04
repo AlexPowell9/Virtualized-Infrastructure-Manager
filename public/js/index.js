@@ -26,7 +26,7 @@ function login() {
         //If successful, pass token to dashboard
         success: function (resultData) {
             resultData = JSON.parse(resultData);
-            window.location.href = "/dashboard.html?t="+resultData.token + "&uid="+resultData.user + "&uname=" + username;
+            window.location.href = "/dashboard.html?t="+encodeURIComponent(resultData.token) + "&uid="+resultData.user + "&uname=" + username;
         },
         //If unsuccessful show error
         error: function (data) {

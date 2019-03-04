@@ -18,7 +18,7 @@ GetUserVMs();
  */
 function GetUrlParamaters() {
     let url = new URL(window.location.href);
-    token = url.searchParams.get("t");
+    token = decodeURIComponent(url.searchParams.get("t"));
     userID = url.searchParams.get("uid");
     //Set username on nav
     document.getElementById("navbarUsername").innerHTML = url.searchParams.get("uname");
@@ -349,7 +349,7 @@ function DowngradeVM() {
 function GetUsageVM() {
     let params = {};
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: "http://127.0.0.1:8082/api/VIM/usage/vm/"+vmArray[selected]._id,
         data: params,
         dataType: "text",
@@ -364,7 +364,7 @@ function GetUsageVM() {
         },
         //If unsuccessful show error
         error: function (data) {
-            console.log("Downgrade VM Error");
+            console.log("Get Usage VM Error");
             console.log(data);
         }
     });
@@ -376,7 +376,7 @@ function GetUsageVM() {
 function GetTotalCharges() {
     let params = {};
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: "http://127.0.0.1:8082/api/VIM/usage/user/"+userID,
         data: params,
         dataType: "text",
@@ -391,7 +391,7 @@ function GetTotalCharges() {
         },
         //If unsuccessful show error
         error: function (data) {
-            console.log("Downgrade VM Error");
+            console.log("Get Total Charges Error");
             console.log(data);
         }
     });
@@ -434,8 +434,10 @@ function Select(index) {
 
     //Display correct upgrade downgrade combo.
     ShowUpgradeDowngrade();
-    GetUsageVM();
-    GetTotalCharges();
+
+    //Get usage and charges
+    // GetUsageVM();
+    // GetTotalCharges();
 }
 
 /*
