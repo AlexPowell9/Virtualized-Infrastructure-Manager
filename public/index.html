@@ -7,11 +7,12 @@
 
     <title>Group One - Cloud Assignment 2</title>
     <meta name="description" content="Group One - Cloud Assignment 2">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="icon" type="image/png" href="./images/favicon.png">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous">
+    <link rel="stylesheet" href="css/custom.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
@@ -40,7 +41,12 @@
         </form>
     </nav>
     <div class="container-fluid h-75">
-        <div class="row justify-content-center h-100">
+        <div class="row my-5">
+            <div class="col-12">
+                <p class="display-3 text-center">Cloud Usage Monitor</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
             <div class="col-4 align-self-center">
                 <div class="card">
                     <div class="card-header bg-dark text-light">
@@ -58,7 +64,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="alert alert-success d-none" role="alert" id="successAlert">
-                                    Successfully Created Account!
+                                    Successfully Created Account! Login above.
                                 </div>
                             </div>
                             <div class="form-group">
@@ -66,8 +72,11 @@
                                     There was an error creating the account.
                                 </div>
                             </div>
+                            <div class="form-group d-none" id="invalidRegister">
+                                <div class="alert alert-danger">Invalid username or password.</div>
+                            </div>
                             <div class="form-group">
-                                <button class="btn btn-primary my-2 my-sm-0 float-right" type="submit" onclick="register()">Register</button>
+                                <button class="btn btn-primary my-2 my-sm-0 float-right" type="submit" onclick="register(); return false;">Register</button>
                             </div>
                         </form>
                     </div>

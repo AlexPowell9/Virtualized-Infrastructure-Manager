@@ -47,6 +47,10 @@ function register() {
     //Get username and password from form
     let username = document.getElementById("registerUsername").value;
     let password = document.getElementById("registerPassword").value;
+    if(username === '' || password === '') {
+        document.getElementById("invalidRegister").classList.remove("d-none");
+        return;
+    }
     console.log(username + " " + password);
     //Send to server
     let params = {
