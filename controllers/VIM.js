@@ -76,19 +76,21 @@ let addVMEvent = (vm, type) => {
         return true;
     }
 let getVmUsage = async (req, res, next) => {
-        let vmId = res.locals.params.id || req.params.id;
+        let vmId = (res.locals.params?req.locals.params.id:0) || req.params.id;
         let vm = await VM.findById(vmId).exec();
         if(!vm)return responses.VMDNE(res);
         let vmCharges = await getVMCharge(vm);
-        responses.sendUsage(res, usage);
+        responses.sendUsage(res, vmCharges);
         if(next)next();
     }
 let getAllVmUsage = async (req, res, next) => {
         let vms = await VM.find({user: res.locals.user.id}).exec();
+        console.log(vms);
         let usage = [];
-        vms.forEach((vm) => {
-            usage.push(getVMCharge(vm));
-        });
+        for(let i = 0; i < vms.length;i++){
+            let u = await getVMCharge(vms[i]);
+            usage.push(u);
+        }
         responses.sendUsage(res, usage);
     }
 let getVMCharge = async (vm, startDate, endDate) => {
@@ -98,6 +100,8 @@ let getVMCharge = async (vm, startDate, endDate) => {
         let endIndex = vm.events.findIndex((value) => {
             return value.time <= endDate;
         });
+        if(!startDate)startIndex = 0;
+        if(!endDate)endDate = vm.events.length-1;
         let events = vm.events.slice(startIndex, endIndex);
         vmTemplates = await VM_TEMPLATES.find().exec();
         let rates = {};
@@ -105,34 +109,38 @@ let getVMCharge = async (vm, startDate, endDate) => {
         let totalTime = {};
         let vmConfigs = [];
         vmTemplates.sort((a, b) => {
-            return a.rate -b.rate;
+            return a.rate - b.rate;
         });
         vmTemplates.forEach((element) => {
             rates[element._id] = element.rate;
             vmConfigs.push(element);
         });
-        let vmConfigsIndex = vmConfigs.indexOf(vm.type);
+        let vmConfigsIndex = 0;
+        for(let i = 0; i < vmConfigs.length; i++){
+            if(vmConfigs[i]._id === vm.type)vmConfigsIndex=i;break;
+        }
+        console.log(vmConfigsIndex);
         events.push({time: endDate});
-        events.forEach(event => {
-            if(!totalTime[vmConfigs[vmConfigsIndex]])totalTime[vmConfigs[vmConfigsIndex]]=0;
-            if(event.type === "start"){
+        events.forEach(element => {
+            if(!totalTime[vmConfigs[vmConfigsIndex]._id])totalTime[vmConfigs[vmConfigsIndex]._id]=0;
+            if(element.type === "start"){
                 lastStart = element.time;
             }
-            if(event.type === "stop"){
-                totalTime[vmConfigs[vmConfigsIndex]]+=element.time-lastStart;
+            if(element.type === "stop"){
+                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
             }
-            if(event.type === "upgrade"){
-                totalTime[vmConfigs[vmConfigsIndex]]+=element.time-lastStart;
+            if(element.type === "upgrade"){
+                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
                 vmConfigsIndex++;
                 lastStart = element.time;
             }
-            if(event.type === "downgrade"){
-                totalTime[vmConfigs[vmConfigsIndex]]+=element.time-lastStart;
+            if(element.type === "downgrade"){
+                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
                 vmConfigsIndex--;
                 lastStart = element.time;
             }
-            if(event.type === "delete"){
-                totalTime[vmConfigs[vmConfigsIndex]]+=element.time-lastStart;
+            if(element.type === "delete"){
+                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
             }
         });
         let rateAndTime = {};
