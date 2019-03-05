@@ -102,6 +102,15 @@ let isRunnning = (vm ,time) => {
     });
     return running;
 }
+let numUpgrade = (vm , time) => {
+    let upgrade = 0;
+    vm.events.forEach((event) => {
+        if(event.time> time)return;
+        if(event.type==="upgrade")upgrade++;
+        if(event.type==="downgrade")upgrade--;
+    });
+    return upgrade;
+}
 let getVMCharge = async (vm, startDate, endDate) => {
         let startIndex = 0;
         let endIndex = 0;
@@ -147,6 +156,7 @@ let getVMCharge = async (vm, startDate, endDate) => {
         for(let i = 0; i < vmConfigs.length; i++){
             if(vmConfigs[i]._id === vm.type)vmConfigsIndex=i;break;
         }
+        vmConfigsIndex += numUpgrade(vm, startDate);
         events.forEach(element => {
             if(!totalTime[vmConfigs[vmConfigsIndex]._id])totalTime[vmConfigs[vmConfigsIndex]._id]=0;
             if(element.type === "start"){
