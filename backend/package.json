@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "mongoose": "^5.4.16",
+    "scrypt": "^6.0.3"
   },
   "devDependencies": {},
   "scripts": {

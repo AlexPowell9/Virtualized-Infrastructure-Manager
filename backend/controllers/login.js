@@ -1,29 +1,99 @@
+const crypto = require("crypto");
+const scrypt = require("scrypt");
+const config = require("../config/config");
+const TOKEN = require(`../${config.MODEL_DIR}/token.js`);
+const scryptParameters = config.SCRYPT_PARAMS;
+const USER = require(`../${config.MODEL_DIR}/user.js`);
+
+const authenticatePassword = (password, user) => {
+    try {
+        if (!user || !password) return false
+        return scrypt.verifyKdfSync(new Buffer(user.password, "base64"), password);
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
+}
+
+const badRequest = (res, message) => {
+    message = message || "bad request";
+    res.status(400).json(message);
+} 
+
+const missingFields = (res, fields) => {
+    if (fields) {
+        let message = fields.reduce((acc, curr) => {
+            acc = acc + curr;
+        }, "missing fields: ");
+        return badRequest(res, message);
+    }
+    return badRequest(res);
+}
+
+const noUser = (res) => {
+    res.status(400).json("user does not exist");
+}
+
+const incorrectPassword = (res) => {
+    res.status(400).json("incorrect login");
+}
+
+const sendToken = (res, token) => {
+    res.status(200).json(token);
+}
+
+const createdUser = (res, user) => {
+    res.status(201).json(user);
+}
+
+
 module.exports = {
     validate: (req, res, next) => {
-        if(!req.username || req.password){
-            return this.responses.missingFields(res);
+        if (!req.body.username || !req.body.password) {
+            return missingFields(res);
         }
         next();
     },
-    authenticate: (req, res, next) => {
-            
+    authenticate: async (req, res, next) => {
+        let user = await USER.findOne({
+            username: req.body.username
+        }).exec();
+        if (!user) return noUser(res);
+        if (authenticatePassword(req.body.password, user)) {
+            res.locals.user = user;
+            next();
+        } else return incorrectPassword(res);
     },
-    generateToken: (req, res, next) =>{
-             
-    },
-    responses: {
-        missingFields: (res, fields) => {
-            if(fields){
-                let message = fields.reduce((acc, curr) => {
-                    acc = acc + curr;
-                }, "missing fields: ");
-                return this.badRequest(res, message);
-            } 
-            return this.badRequest(res);
-        },
-        badRequest: (res, message) => {
-            message = message || "bad request";
-            res.status(400).json(message);
+    generateToken: async (req, res, next) => {
+        let token = {
+            token: crypto.randomBytes(64).toString("base64"),
+            expiry: Date.now() + config.TOKEN_EXPIRY,
+            user: res.locals.user.id
         }
+        token = await TOKEN.create(token);
+        return sendToken(res, token);
+    },
+    registerUser: async (req, res, next) => {
+        let user = res.locals.body || req.body;
+        let newUser = await USER.create(user);
+        createdUser(res, newUser);
+        if (next) next();
+    },
+    authenticateUser: async (req, res, next) => {
+        try {
+            let token = req.header("Authorization").slice(7);
+            let t = await TOKEN.findOne({
+                token: token
+            }).exec();
+            if (t) {
+                let user = await USER.findById(t.user).exec();
+                res.locals.user = {};
+                res.locals.user.id = user._id;
+            }
+            next()
+        } catch (e) {
+            next();
+        }
+
     }
-}
+};
