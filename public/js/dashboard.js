@@ -350,7 +350,7 @@ function GetUsageVM() {
     let params = {};
     $.ajax({
         type: 'GET',
-        url: "http://127.0.0.1:8082/api/VIM/usage/vm/"+vmArray[selected]._id,
+        url: "http://127.0.0.1:8082/api/VIM/usage/vm/" + vmArray[selected]._id,
         data: params,
         dataType: "text",
         //Attach auth header
@@ -360,7 +360,13 @@ function GetUsageVM() {
         //If successful, show success
         success: function (resultData) {
             resultData = JSON.parse(resultData);
-            UpdateVMUsage(resultData);
+            let totalUsage = 0;
+            Object.entries(resultData.rate).forEach(entry => {
+                totalUsage += (resultData.time[Object.keys(resultData.time)[0]] / 1000) * entry[1];
+                // let key = entry[0];
+                // let value = entry[1];
+            });
+            UpdateVMUsage(totalUsage);
         },
         //If unsuccessful show error
         error: function (data) {
@@ -377,7 +383,7 @@ function GetTotalCharges() {
     let params = {};
     $.ajax({
         type: 'GET',
-        url: "http://127.0.0.1:8082/api/VIM/usage/user/"+userID,
+        url: "http://127.0.0.1:8082/api/VIM/usage/user/" + userID,
         data: params,
         dataType: "text",
         //Attach auth header
@@ -387,7 +393,15 @@ function GetTotalCharges() {
         //If successful, show success
         success: function (resultData) {
             resultData = JSON.parse(resultData);
-            UpdateTotalCharges(resultData);
+            let totalUsage = 0;
+            resultData.forEach((value, index) => {
+                Object.entries(value.rate).forEach(entry => {
+                    totalUsage += (value.time[Object.keys(value.time)[0]] / 1000) * entry[1];
+                    // let key = entry[0];
+                    // let value = entry[1];
+                });
+            });
+            UpdateTotalCharges(totalUsage);
         },
         //If unsuccessful show error
         error: function (data) {
@@ -437,22 +451,22 @@ function Select(index) {
     ShowUpgradeDowngrade();
 
     //Get usage and charges
-    // GetUsageVM();
-    // GetTotalCharges();
+    GetUsageVM();
+    GetTotalCharges();
 }
 
 /*
-* Update VM Usage Display
-*/
-function UpdateVMUsage(usage){
-    document.getElementById("detailsUsage").innerHTML =  usage + " mins";
+ * Update VM Usage Display
+ */
+function UpdateVMUsage(usage) {
+    document.getElementById("detailsUsage").innerHTML = "$" + usage.toFixed(2);
 }
 
 /*
-* Update Total Charges Display
-*/
-function UpdateTotalCharges(totalCharges){
-    document.getElementById("detailsUsage").innerHTML =  "$" + totalCharges;
+ * Update Total Charges Display
+ */
+function UpdateTotalCharges(totalCharges) {
+    document.getElementById("detailsTotalCharges").innerHTML = "$" + totalCharges.toFixed(2);
 }
 
 /*
