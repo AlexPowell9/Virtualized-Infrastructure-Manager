@@ -72,10 +72,9 @@
             </div>
 
             <div class="col-6" style="display:none" id="vmdetails">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="float-left pb-0 pt-2">Details</span>
-                        <!--https://tempusdominus.github.io/bootstrap-4/Usage/-->
+                <div class="row my-2">
+                    <div class="col-4">
+                        <span> From </span>
                         <div class="input-group date" id="startTimePicker" data-target-input="nearest">
                             <input type="text" id="startTimePickerInput" class="form-control datetimepicker-input"
                                 data-target="#startTimePicker" />
@@ -83,53 +82,66 @@
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-4">
+                        <span> to </span>
                         <div class="input-group date" id="endTimePicker" data-target-input="nearest">
-                            <input type="text" id="endTimePickerInput" class="form-control datetimepicker-input"
-                                data-target="#endTimePicker" />
+                            <input type="text" id="endTimePickerInput" class="form-control datetimepicker-input" data-target="#endTimePicker" />
                             <div class="input-group-append" data-target="#endTimePicker" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
-                        </div>
-                        <button type="button" class="btn btn-danger float-right" onclick="DeleteVM()">
-                            Delete
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <p>
-                            <strong>ID: </strong><span id="detailsID"></span>
-                        </p>
-                        <p>
-                            <strong>Name: </strong><span id="detailsName"></span>
-                        </p>
-                        <p>
-                            <strong>Description: </strong><span id="detailsDescription"></span>
-                        </p>
-                        <p>
-                            <strong>Rate: </strong><span id="detailsRate"></span>
-                        </p>
-                        <p>
-                            <strong>Current Status: </strong><span id="detailsStatus"></span>
-                        </p>
-                        <p>
-                            <strong>Usage: </strong><span id="detailsUsage"></span>
-                        </p>
-                        <hr />
-                        <p>
-                            <strong>Total Charges: </strong><span id="detailsTotalCharges"></span>
-                        </p>
-                    </div>
-                    <div class="card-footer text-muted">
-                        <!--Status-->
-                        <button type="button" class="btn btn-success" onclick="StartVM()" id="controlsStart">Start VM</button>
-                        <button type="button" class="btn btn-danger" onclick="StopVM()" id="controlsStop">Stop VM</button>
-                        <!--Type-->
-                        <button type="button" class="btn btn-secondary" onclick="UpgradeVM()" id="controlsUpgrade">Upgrade</button>
-                        <button type="button" class="btn btn-secondary" onclick="DowngradeVM()" id="controlsDowngrade">Downgrade</button>
-                        <!--Usage-->
-                        <button type="button" class="btn btn-info" onclick="GetUsageVM()">Update Usage</button>
-                        <button type="button" class="btn btn-info" onclick="GetTotalCharges()">Update Total Charges</button>
+                        </div>                       
                     </div>
                 </div>
+                <div class="row my-2">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="float-left pb-0 pt-2">Details</span>
+                                <button type="button" class="btn btn-danger float-right" onclick="DeleteVM()">
+                                    Delete
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <p>
+                                    <strong>ID: </strong><span id="detailsID"></span>
+                                </p>
+                                <p>
+                                    <strong>Name: </strong><span id="detailsName"></span>
+                                </p>
+                                <p>
+                                    <strong>Description: </strong><span id="detailsDescription"></span>
+                                </p>
+                                <p>
+                                    <strong>Rate: </strong><span id="detailsRate"></span>
+                                </p>
+                                <p>
+                                    <strong>Current Status: </strong><span id="detailsStatus"></span>
+                                </p>
+                                <p>
+                                    <strong>Usage: </strong><span id="detailsUsage"></span>
+                                </p>
+                                <hr />
+                                <p>
+                                    <strong>Total Charges: </strong><span id="detailsTotalCharges"></span>
+                                </p>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <!--Status-->
+                                <button type="button" class="btn btn-success" onclick="StartVM()" id="controlsStart">Start VM</button>
+                                <button type="button" class="btn btn-danger" onclick="StopVM()" id="controlsStop">Stop VM</button>
+                                <!--Type-->
+                                <button type="button" class="btn btn-secondary" onclick="UpgradeVM()" id="controlsUpgrade">Upgrade</button>
+                                <button type="button" class="btn btn-secondary" onclick="DowngradeVM()" id="controlsDowngrade">Downgrade</button>
+                                <!--Usage-->
+                                <button type="button" class="btn btn-info" onclick="GetUsageVM()">Update Usage</button>
+                                <button type="button" class="btn btn-info" onclick="GetTotalCharges()">Update Total Charges</button>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+
+
             </div>
 
             <div class="col-2 d-none">
