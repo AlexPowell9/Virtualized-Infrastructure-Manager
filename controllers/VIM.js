@@ -79,7 +79,7 @@ let getVmUsage = async (req, res, next) => {
         let vmId = (res.locals.params?req.locals.params.id:0) || req.params.id;
         let vm = await VM.findById(vmId).exec();
         if(!vm)return responses.VMDNE(res);
-        let vmCharges = await getVMCharge(vm, new Date(req.query.start), new Date(req.query.end));
+        let vmCharges = await getVMCharge(vm, new Date(parseInt(req.query.start)), new Date(parseInt(req.query.end)));
         responses.sendUsage(res, vmCharges);
         if(next)next();
     }
@@ -88,7 +88,7 @@ let getAllVmUsage = async (req, res, next) => {
         console.log(vms);
         let usage = [];
         for(let i = 0; i < vms.length;i++){
-            let u = await getVMCharge(vms[i], new Date(req.query.start), new Date(req.query.end));
+            let u = await getVMCharge(vms[i], new Date(parseInt(req.query.start)), new Date(parseInt(req.query.end)));
             usage.push(u);
         }
         responses.sendUsage(res, usage);
@@ -157,7 +157,7 @@ let getVMCharge = async (vm, startDate, endDate) => {
         if(vmConfigs[i]._id === vm.type)vmConfigsIndex=i;break;
     }
     vmConfigsIndex += numUpgrade(vm, startDate);
-    let laststart = null;
+    let lastStart = null;
     let running = isRunning(vm, startDate);
     events.forEach(element => {
         if(!totalTime[vmConfigs[vmConfigsIndex]._id])totalTime[vmConfigs[vmConfigsIndex]._id]=0;
