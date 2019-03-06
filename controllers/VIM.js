@@ -127,12 +127,12 @@ let getVMCharge = async (vm, startDate, endDate) => {
         }
     }
     if(endDate){
-        let endIndex = 0;
+        let endIndex = events.length-1;
         for(let i = events.length -1; i >= 0; i--){
             if(events[i].time <= endDate)endIndex=i;break;
         }
 
-        if(endIndex === -1)endIndex = 0;
+        if(endIndex === -1)endIndex = events.length-1;
         events = events.slice(endIndex, events.length-1);
         if(isRunning(vm, endDate) && endIndex !== 0 && events[endIndex].time !== endDate){
             events.push({
@@ -157,7 +157,7 @@ let getVMCharge = async (vm, startDate, endDate) => {
         if(vmConfigs[i]._id === vm.type)vmConfigsIndex=i;break;
     }
     vmConfigsIndex += numUpgrade(vm, startDate);
-    let laststart;
+    let laststart = null;
     let running = isRunning(vm, startDate);
     events.forEach(element => {
         if(!totalTime[vmConfigs[vmConfigsIndex]._id])totalTime[vmConfigs[vmConfigsIndex]._id]=0;
