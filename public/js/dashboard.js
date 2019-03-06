@@ -13,6 +13,43 @@ GetVMTemplates();
 //Get User's VMs
 GetUserVMs();
 
+$(function () {
+    $('#startTimePicker').datetimepicker({
+        defaultDate: new Date('Apr 30, 2000'),
+        icons: {
+            time: 'far fa-clock',
+            date: 'far fa-calendar-alt',
+            up: 'fas fa-arrow-up',
+            down: 'fas fa-arrow-down',
+            previous: 'fas fa-chevron-left',
+            next: 'fas fa-chevron-right',
+            today: 'far fa-calendar-check',
+            clear: 'far fa-trash-alt',
+            close: 'fas fa-times'
+        }
+    });
+    $('#endTimePicker').datetimepicker({
+        defaultDate: new Date(),
+        icons: {
+            time: 'far fa-clock',
+            date: 'far fa-calendar-alt',
+            up: 'fas fa-arrow-up',
+            down: 'fas fa-arrow-down',
+            previous: 'fas fa-chevron-left',
+            next: 'fas fa-chevron-right',
+            today: 'far fa-calendar-check',
+            clear: 'far fa-trash-alt',
+            close: 'fas fa-times'
+        }
+    });
+    $("#startTimePicker").on("change.datetimepicker", function (e) {
+        $('#endTimePicker').datetimepicker('minDate', e.date);
+    });
+    $("#endTimePicker").on("change.datetimepicker", function (e) {
+        $('#startTimePicker').datetimepicker('maxDate', e.date);
+    });
+});
+
 /*
  * Parse the url to get the paramaters for the username, id, and token.
  */
@@ -347,7 +384,10 @@ function DowngradeVM() {
  * Get VM Usage Function
  */
 function GetUsageVM() {
-    let params = {};
+    let params = {
+        start: new Date(document.getElementById("startTimePickerInput").value).getTime(),
+        end: new Date(document.getElementById("endTimePickerInput").value).getTime()
+    };
     $.ajax({
         type: 'GET',
         url: "http://127.0.0.1:8082/api/VIM/usage/vm/" + vmArray[selected]._id,
@@ -380,7 +420,10 @@ function GetUsageVM() {
  * Get Total Charges Function
  */
 function GetTotalCharges() {
-    let params = {};
+    let params = {
+        start: new Date(document.getElementById("startTimePickerInput").value).getTime(),
+        end: new Date(document.getElementById("endTimePickerInput").value).getTime()
+    };
     $.ajax({
         type: 'GET',
         url: "http://127.0.0.1:8082/api/VIM/usage/user/" + userID,
@@ -393,6 +436,7 @@ function GetTotalCharges() {
         //If successful, show success
         success: function (resultData) {
             resultData = JSON.parse(resultData);
+            console.log(resultData);
             let totalUsage = 0;
             resultData.forEach((value, index) => {
                 Object.entries(value.rate).forEach(entry => {

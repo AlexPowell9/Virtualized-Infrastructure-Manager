@@ -18,6 +18,10 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
+
 
 </head>
 
@@ -52,8 +56,8 @@
                         </ul>
                         <!--Create New VM Button-->
                         <div class="btn-group w-100 my-2">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-plus"></i>
                                 New Virtual Machine
                             </button>
@@ -71,6 +75,21 @@
                 <div class="card">
                     <div class="card-header">
                         <span class="float-left pb-0 pt-2">Details</span>
+                        <!--https://tempusdominus.github.io/bootstrap-4/Usage/-->
+                        <div class="input-group date" id="startTimePicker" data-target-input="nearest">
+                            <input type="text" id="startTimePickerInput" class="form-control datetimepicker-input"
+                                data-target="#startTimePicker" />
+                            <div class="input-group-append" data-target="#startTimePicker" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                        <div class="input-group date" id="endTimePicker" data-target-input="nearest">
+                            <input type="text" id="endTimePickerInput" class="form-control datetimepicker-input"
+                                data-target="#endTimePicker" />
+                            <div class="input-group-append" data-target="#endTimePicker" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
                         <button type="button" class="btn btn-danger float-right" onclick="DeleteVM()">
                             Delete
                         </button>
@@ -150,6 +169,9 @@
         </div>
     </div>
     <script src="js/dashboard.js"></script>
+    <script type="text/javascript">
+
+    </script>
 </body>
 
 </html>
