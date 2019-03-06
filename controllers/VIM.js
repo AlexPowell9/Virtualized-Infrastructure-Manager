@@ -93,7 +93,7 @@ let getAllVmUsage = async (req, res, next) => {
         }
         responses.sendUsage(res, usage);
     }
-let isRunnning = (vm ,time) => {
+let isRunning = (vm ,time) => {
     let running = false;
     vm.events.forEach((event) => {
         if(event.time>time)return;
