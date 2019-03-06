@@ -155,7 +155,10 @@ let getVMCharge = async (vm, startDate, endDate) => {
     });
     let vmConfigsIndex = 0;
     for(let i = 0; i < vmConfigs.length; i++){
-        if(vmConfigs[i]._id === vm.type)vmConfigsIndex=i;break;
+        if(vmConfigs[i]._id == vm.type){
+            vmConfigsIndex=i;
+            break;
+        }
     }
     vmConfigsIndex += numUpgrade(vm, startDate);
     let lastStart = null;

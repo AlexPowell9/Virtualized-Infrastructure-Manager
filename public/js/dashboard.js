@@ -401,8 +401,8 @@ function GetUsageVM() {
         success: function (resultData) {
             resultData = JSON.parse(resultData);
             let totalUsage = 0;
-            Object.entries(resultData.rate).forEach(entry => {
-                totalUsage += (resultData.time[Object.keys(resultData.time)[0]] / 1000) * entry[1];
+            Object.entries(resultData.rate).forEach((entry, index) => {
+                totalUsage += (resultData.time[Object.keys(resultData.time)[index]] / 60000) * entry[1];
                 // let key = entry[0];
                 // let value = entry[1];
             });
@@ -439,8 +439,8 @@ function GetTotalCharges() {
             console.log(resultData);
             let totalUsage = 0;
             resultData.forEach((value, index) => {
-                Object.entries(value.rate).forEach(entry => {
-                    totalUsage += (value.time[Object.keys(value.time)[0]] / 1000) * entry[1];
+                Object.entries(value.rate).forEach((entry, index) => {
+                    totalUsage += (value.time[Object.keys(value.time)[index]] / 60000) * entry[1];
                     // let key = entry[0];
                     // let value = entry[1];
                 });
