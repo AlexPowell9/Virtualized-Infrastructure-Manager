@@ -113,6 +113,7 @@ function GetUserVMs() {
                         if (v.type == "delete") {
                             //I love cancer
                             d = true;
+                            console.log(value._id);
                         }
                     });
                     if (d) {
@@ -121,12 +122,13 @@ function GetUserVMs() {
                 }
             });
             //Big Yikes
-            toRemove.forEach((value) => {
-                function toFind(element) {
-                    return element > value;
-                }
-                vmArray.splice(vmArray.findIndex(toFind), 1);
-            });
+            for(let i=0; i<toRemove.length; i++){
+                vmArray.splice(vmArray.findIndex(x=> x._id == toRemove[i]), 1);
+            }
+            // toRemove.forEach((value) => {
+            //     console.log("Position " + vmArray.findIndex(x=> x == value));
+            //     vmArray.splice(vmArray.findIndex(x=> x == value), 1);
+            // });
             UpdateList();
         },
         //If unsuccessful show error
@@ -164,13 +166,14 @@ function UpdateList() {
         vmList.appendChild(newVM);
     });
     if (vmArray.length > 0) {
-        if (selected >= 0) {
+        if (selected > 0) {
             Select(selected);
         } else {
             Select(0);
         }
     } else {
         selected = -1;
+        document.getElementById("vmdetails").style.display = "none";
     }
 }
 
@@ -456,6 +459,7 @@ function GetTotalCharges() {
 }
 
 function Select(index) {
+    console.log(index);
     //Select the list element
     selected = index;
     if (selected < 0) {
@@ -467,6 +471,7 @@ function Select(index) {
     }
     //Add active tags
     vmList.childNodes[selected].classList.add("active");
+    
     //Fill out details section
     document.getElementById("vmdetails").style.display = "block";
     document.getElementById("detailsID").innerHTML = "" + vmArray[selected]._id;
