@@ -157,6 +157,7 @@ let getVMCharge = async (vm, startDate, endDate) => {
             if(vmConfigs[i]._id === vm.type)vmConfigsIndex=i;break;
         }
         vmConfigsIndex += numUpgrade(vm, startDate);
+        let laststart;
         events.forEach(element => {
             if(!totalTime[vmConfigs[vmConfigsIndex]._id])totalTime[vmConfigs[vmConfigsIndex]._id]=0;
             if(element.type === "start"){
