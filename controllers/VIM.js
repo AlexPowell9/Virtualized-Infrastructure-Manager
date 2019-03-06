@@ -133,7 +133,7 @@ let getVMCharge = async (vm, startDate, endDate) => {
         }
 
         if(endIndex === -1)endIndex = events.length-1;
-        events = events.slice(endIndex, events.length-1);
+        events = events.slice(0, endIndex);
         if(isRunning(vm, endDate) && endIndex !== 0 && events[endIndex].time !== endDate){
             events.push({
                 type: "stop",
