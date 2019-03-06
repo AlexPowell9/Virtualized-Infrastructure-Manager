@@ -112,82 +112,88 @@ let numUpgrade = (vm , time) => {
     return upgrade;
 }
 let getVMCharge = async (vm, startDate, endDate) => {
-        let startIndex = 0;
-        let endIndex = 0;
-        let events = vm.events;
-        if(startDate){
-            startIndex = events.findIndex((value) => {
-                return value.time >= startDate;
+    let events = vm.events;
+    if(startDate){
+        let startIndex = events.findIndex((value) => {
+            return value.time >= startDate;
+        });
+        if(startIndex === -1)startIndex = 0;
+        events = events.slice(startIndex, events.length-1);
+        if(isRunning(vm, startDate) && startIndex !== 0 && events[startIndex].time !== startDate){
+            events.unshift({
+                type: "start",
+                time: startDate
             });
-            if(startIndex === -1)return {};
-            events = events.slice(startIndex, events.length-1);
-            if(isRunnning(vm, startDate)){
-                events.unshift({
-                    type: "start",
-                    time: startDate
-                });
-            }
         }
-        if(endDate){
-            let endIndex = vm.events.findIndex((value) => {
-                return value.time <= endDate;
-            });
-            if(endIndex === -1)return {};
-            events = events.slice(0, endIndex);
-            if(isRunning(vm, endDate)){
-                events.push({
-                    type: "stop",
-                    time: endDate
-                })
-            }
-        }
-        vmTemplates = await VM_TEMPLATES.find().exec();
-        let rates = {};
-        let totalTime = {};
-        let vmConfigs = [];
-        vmTemplates.sort((a, b) => {
-            return a.rate - b.rate;
-        });
-        vmTemplates.forEach((element) => {
-            rates[element._id] = element.rate;
-            vmConfigs.push(element);
-        });
-        let vmConfigsIndex = 0;
-        for(let i = 0; i < vmConfigs.length; i++){
-            if(vmConfigs[i]._id === vm.type)vmConfigsIndex=i;break;
-        }
-        vmConfigsIndex += numUpgrade(vm, startDate);
-        let laststart;
-        events.forEach(element => {
-            if(!totalTime[vmConfigs[vmConfigsIndex]._id])totalTime[vmConfigs[vmConfigsIndex]._id]=0;
-            if(element.type === "start"){
-                lastStart = element.time;
-            }
-            if(element.type === "stop"){
-                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
-            }
-            if(element.type === "upgrade"){
-                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
-                vmConfigsIndex++;
-                lastStart = element.time;
-            }
-            if(element.type === "downgrade"){
-                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
-                vmConfigsIndex--;
-                lastStart = element.time;
-            }
-            if(element.type === "delete"){
-                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
-            }
-        });
-        let rateAndTime = {};
-        rateAndTime.rate ={};
-        Object.entries(totalTime).forEach((value) => {
-            rateAndTime.rate[value[0]] = rates[value[0]];
-        });
-        rateAndTime.time = totalTime;
-        return rateAndTime;
     }
+    if(endDate){
+        let endIndex = events.findIndex((value) => {
+            return value.time >= endDate;
+        });
+        if(endIndex === -1)endIndex = 0;
+        events = events.slice(endIndex, events.length-1);
+        if(isRunning(vm, endDate) && endIndex !== 0 && events[endIndex].time !== endDate){
+            events.unshift({
+                type: "start",
+                time: endDate
+            });
+        }
+    }
+    vmTemplates = await VM_TEMPLATES.find().exec();
+    let rates = {};
+    let totalTime = {};
+    let vmConfigs = [];
+    vmTemplates.sort((a, b) => {
+        return a.rate - b.rate;
+    });
+    vmTemplates.forEach((element) => {
+        rates[element._id] = element.rate;
+        vmConfigs.push(element);
+    });
+    let vmConfigsIndex = 0;
+    for(let i = 0; i < vmConfigs.length; i++){
+        if(vmConfigs[i]._id === vm.type)vmConfigsIndex=i;break;
+    }
+    vmConfigsIndex += numUpgrade(vm, startDate);
+    let laststart;
+    let running = isRunning(vm, startDate);
+    events.forEach(element => {
+        if(!totalTime[vmConfigs[vmConfigsIndex]._id])totalTime[vmConfigs[vmConfigsIndex]._id]=0;
+        if(element.type === "start"){
+            lastStart = element.time;
+            running = true;
+        }
+        if(element.type === "stop"){
+            totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
+            running = false;
+        }
+        if(element.type === "upgrade"){
+            if(running){
+                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
+                lastStart = element.time;
+            }
+            vmConfigsIndex++; 
+        }
+        if(element.type === "downgrade"){
+            if(running){
+                totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
+                lastStart = element.time;
+            }
+            vmConfigsIndex--;
+        }
+        if(element.type === "delete"){
+            totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
+            running = false;
+        }
+    });
+    let rateAndTime = {};
+    rateAndTime.rate ={};
+    Object.entries(totalTime).forEach((value) => {
+        rateAndTime.rate[value[0]] = rates[value[0]];
+    });
+    rateAndTime.time = totalTime;
+    return rateAndTime;
+}
 let responses = {
         templateDNE: (res) => {
             res.status(404).json("VM template does not exist");
