@@ -166,25 +166,25 @@ let getVMCharge = async (vm, startDate, endDate) => {
             running = true;
         }
         if(element.type === "stop"){
-            totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
+            if(lastStart)totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
             running = false;
         }
         if(element.type === "upgrade"){
-            if(running){
+            if(running && lastStart){
                 totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
                 lastStart = element.time;
             }
             vmConfigsIndex++; 
         }
         if(element.type === "downgrade"){
-            if(running){
+            if(running && lastStart){
                 totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
                 lastStart = element.time;
             }
             vmConfigsIndex--;
         }
         if(element.type === "delete"){
-            totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
+            if(lastStart)totalTime[vmConfigs[vmConfigsIndex]._id]+=element.time-lastStart;
             running = false;
         }
     });
