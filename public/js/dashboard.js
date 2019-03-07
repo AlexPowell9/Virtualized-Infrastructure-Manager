@@ -16,7 +16,7 @@ GetUserVMs();
 
 $(function () {
     $('#startTimePicker').datetimepicker({
-        defaultDate: new Date('Apr 30, 2000'),
+        defaultDate: new Date('Mar 1, 2019'),
         icons: {
             time: 'far fa-clock',
             date: 'far fa-calendar-alt',
@@ -123,8 +123,8 @@ function GetUserVMs() {
                 }
             });
             //Big Yikes
-            for(let i=0; i<toRemove.length; i++){
-                vmArray.splice(vmArray.findIndex(x=> x._id == toRemove[i]), 1);
+            for (let i = 0; i < toRemove.length; i++) {
+                vmArray.splice(vmArray.findIndex(x => x._id == toRemove[i]), 1);
             }
             // toRemove.forEach((value) => {
             //     console.log("Position " + vmArray.findIndex(x=> x == value));
@@ -405,6 +405,10 @@ function GetUsageVM() {
         success: function (resultData) {
             resultData = JSON.parse(resultData);
             let totalUsage = 0;
+            if (resultData.rate == null) {
+                UpdateVMUsage(totalUsage);
+                return;
+            }
             Object.entries(resultData.rate).forEach((entry, index) => {
                 totalUsage += (resultData.time[Object.keys(resultData.time)[index]] / 60000) * entry[1];
                 // let key = entry[0];
@@ -443,11 +447,13 @@ function GetTotalCharges() {
             console.log(resultData);
             let totalUsage = 0;
             resultData.forEach((value, index) => {
-                Object.entries(value.rate).forEach((entry, index) => {
-                    totalUsage += (value.time[Object.keys(value.time)[index]] / 60000) * entry[1];
-                    // let key = entry[0];
-                    // let value = entry[1];
-                });
+                if (value.rate != null) {
+                    Object.entries(value.rate).forEach((entry, index) => {
+                        totalUsage += (value.time[Object.keys(value.time)[index]] / 60000) * entry[1];
+                        // let key = entry[0];
+                        // let value = entry[1];
+                    });
+                }
             });
             UpdateTotalCharges(totalUsage);
         },
@@ -472,7 +478,7 @@ function Select(index) {
     }
     //Add active tags
     vmList.childNodes[selected].classList.add("active");
-    
+
     //Fill out details section
     document.getElementById("vmdetails").style.display = "block";
     document.getElementById("detailsID").innerHTML = "" + vmArray[selected]._id;
