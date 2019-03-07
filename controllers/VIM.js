@@ -118,9 +118,9 @@ let getVMCharge = async (vm, startDate, endDate) => {
         let startIndex = events.findIndex((value) => {
             return value.time >= startDate;
         });
-        if(startIndex === -1)startIndex = 0;
+        if(startIndex === -1)startIndex = events.length-1;
         events = events.slice(startIndex, events.length);
-        if(isRunning(vm, startDate) && events[startIndex].time !== startDate){
+        if(isRunning(vm, startDate) && events[startIndex] && events[startIndex].time !== startDate){
             events.unshift({
                 type: "start",
                 time: startDate
@@ -129,11 +129,11 @@ let getVMCharge = async (vm, startDate, endDate) => {
     }
     if(endDate){
         if(endDate > Date.now())endDate = Date.now();
+        if(startDate > Date.now())return {};
         let endIndex = events.length-1;
         for(let i = events.length -1; i >= 0; i--){
             if(events[i].time <= endDate)endIndex=i;break;
         }
-
         if(endIndex === -1)endIndex = events.length-1;
         events = events.slice(0, endIndex+1);
         if(isRunning(vm, endDate) && events[endIndex].time !== endDate){
