@@ -410,7 +410,7 @@ function GetUsageVM() {
                 return;
             }
             Object.entries(resultData.rate).forEach((entry, index) => {
-                totalUsage += (resultData.time[Object.keys(resultData.time)[index]] / 60000) * entry[1];
+                totalUsage += (resultData.time[Object.keys(resultData.time)[index]] / 60000);
                 // let key = entry[0];
                 // let value = entry[1];
             });
@@ -515,7 +515,7 @@ function Select(index) {
  * Update VM Usage Display
  */
 function UpdateVMUsage(usage) {
-    document.getElementById("detailsUsage").innerHTML = "$" + usage.toFixed(2);
+    document.getElementById("detailsUsage").innerHTML = usage.toFixed(1) + " minutes";
 }
 
 /*
