@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+//vm template
 let schema = new mongoose.Schema(
     {
         name:String,

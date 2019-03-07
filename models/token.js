@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+//stores all of the tokens for user login
 let schema = new mongoose.Schema(
     {
         token: String,

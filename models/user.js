@@ -8,11 +8,13 @@ let schema = new mongoose.Schema({
         password: String
 });
 
+//when the user is registered or the password is changed it hashes the password
 schema.pre('save', function(next){
     if (!this.isModified('password')) {
         return next();
     }
     try {
+        //uses scrypt for password hashing
         this.password = scrypt.kdfSync(this.password, scryptParams).toString("base64");
         next();
     } catch (err) {

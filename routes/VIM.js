@@ -3,8 +3,10 @@ const config = require("../config/config");
 
 let router = express.Router();
 
+//get controllers
 const VIMControllers = require(`../${config.CONTROLLER_LOCATION}/VIM`);
 
+//VIM endpoints
 router.post("/create", VIMControllers.createVM);
 
 router.post("/start", VIMControllers.startVM);

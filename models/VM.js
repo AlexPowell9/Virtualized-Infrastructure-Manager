@@ -4,7 +4,7 @@ let schema = new mongoose.Schema(
     {
         type: String,
         user: String,
-        events: [{
+        events: [{//events stored in the object
             type: event
         }],
         deleted: Boolean

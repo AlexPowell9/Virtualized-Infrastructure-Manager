@@ -9,5 +9,5 @@ let schema = new mongoose.Schema(
         }
     }
 );
-
+//this gets stored in the vm object, so this doesn't return a model
 module.exports = schema;

@@ -5,22 +5,23 @@ const mongoose = require("mongoose");
 
 const setupEnv = require(`./${config.SETUP_ENV_LOCATION}`);
 
+//connect to mongodb
 mongoose.connect(config.dbUri).catch((e) =>{
-    console.log(e);
+    console.log(e);//if error
 });
 
 let start = async ()=>{
-    await setupEnv();
-    const app = express();
-    app.use(bodyParser.json({
+    await setupEnv();//setup the server, useful for future expansion
+    const app = express();//using express for routing
+    app.use(bodyParser.json({//for parsing body of requests as JSON
         limit: '10mb'
     }));
-    app.use(bodyParser.urlencoded({
+    app.use(bodyParser.urlencoded({//for parsing URL queries
         limit: '10mb',
         extended: true
     }));
-    app.use("/api", require(`./${config.ROUTES_DIR}/index`));
-    app.use(express.static('public'));
-    app.listen(config.SERVER_PORT, config.functions.onServerStart);
+    app.use("/api", require(`./${config.ROUTES_DIR}/index`));//api routes to /api
+    app.use(express.static('public'));//static resources found in public
+    app.listen(config.SERVER_PORT, config.functions.onServerStart);//run server
 }
 start();

@@ -5,7 +5,7 @@ mongoose.connect(config.dbUri).catch((e) =>{
 });
 const VM_TEMPLATES = require(`./${config.MODEL_DIR}/vmTemplates`);
 
-
+//create the vm configurations
 let createVms = async () => {
     await VM_TEMPLATES.create({
         description: "8 virtual processor cores, 16 GB of virtual RAM, 20 GB of storage space in the root file system",
