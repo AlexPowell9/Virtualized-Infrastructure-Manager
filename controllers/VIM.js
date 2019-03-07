@@ -114,7 +114,9 @@ let numUpgrade = (vm , time) => {
 }
 let getVMCharge = async (vm, startDate, endDate) => {
     let events = vm.events;
+    if(events.length === 0)return {};
     if(startDate){
+        if(startDate > Date.now())return {};
         let startIndex = events.findIndex((value) => {
             return value.time >= startDate;
         });
@@ -129,7 +131,6 @@ let getVMCharge = async (vm, startDate, endDate) => {
     }
     if(endDate){
         if(endDate > Date.now())endDate = Date.now();
-        if(startDate > Date.now())return {};
         let endIndex = events.length-1;
         for(let i = events.length -1; i >= 0; i--){
             if(events[i].time <= endDate)endIndex=i;break;
