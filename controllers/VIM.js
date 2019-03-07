@@ -68,6 +68,7 @@ let deleteVM = async (req, res, next) => {
         else return responses.eventFailed(res, body.type);
     }
 let addVMEvent = (vm, type) => {
+        if(vm.events[vm.events.length -1] === "delete")return false;
         vm.events.push({
             type: getEventType(type),
             time: Date.now()
@@ -119,7 +120,7 @@ let getVMCharge = async (vm, startDate, endDate) => {
         });
         if(startIndex === -1)startIndex = 0;
         events = events.slice(startIndex, events.length);
-        if(isRunning(vm, startDate) && startIndex !== 0 && events[startIndex].time !== startDate){
+        if(isRunning(vm, startDate) && events[startIndex].time !== startDate){
             events.unshift({
                 type: "start",
                 time: startDate
