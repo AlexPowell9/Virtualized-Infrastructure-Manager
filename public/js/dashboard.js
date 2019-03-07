@@ -1,3 +1,4 @@
+let api = "http://127.0.0.1:8082/api";
 //Define globals, this is a surprise tool that will help us later.
 let token;
 let userID;
@@ -68,7 +69,7 @@ function GetVMTemplates() {
     let params = {};
     $.ajax({
         type: 'GET',
-        url: "http://127.0.0.1:8082/api/data/template",
+        url: api + "/data/template",
         data: params,
         dataType: "text",
         //Attach auth header
@@ -94,7 +95,7 @@ function GetUserVMs() {
     let params = {};
     $.ajax({
         type: 'GET',
-        url: "http://127.0.0.1:8082/api/data/user/vm",
+        url: api + "/data/user/vm",
         data: params,
         dataType: "text",
         //Attach auth header
@@ -187,7 +188,7 @@ function CreateVM(index) {
     };
     $.ajax({
         type: 'POST',
-        url: "http://127.0.0.1:8082/api/VIM/create",
+        url: api + "/VIM/create",
         data: params,
         dataType: "text",
         //Attach auth header
@@ -217,7 +218,7 @@ function DeleteVM() {
     };
     $.ajax({
         type: 'POST',
-        url: "http://127.0.0.1:8082/api/VIM/delete",
+        url: api + "/VIM/delete",
         data: params,
         dataType: "text",
         //Attach auth header
@@ -247,7 +248,7 @@ function StartVM() {
     };
     $.ajax({
         type: 'POST',
-        url: "http://127.0.0.1:8082/api/VIM/start",
+        url: api + "/VIM/start",
         data: params,
         dataType: "text",
         //Attach auth header
@@ -276,7 +277,7 @@ function StopVM() {
     };
     $.ajax({
         type: 'POST',
-        url: "http://127.0.0.1:8082/api/VIM/stop",
+        url: api + "/VIM/stop",
         data: params,
         dataType: "text",
         //Attach auth header
@@ -305,7 +306,7 @@ function StopVM() {
     };
     $.ajax({
         type: 'POST',
-        url: "http://127.0.0.1:8082/api/VIM/stop",
+        url: api + "/VIM/stop",
         data: params,
         dataType: "text",
         //Attach auth header
@@ -334,7 +335,7 @@ function UpgradeVM() {
     };
     $.ajax({
         type: 'POST',
-        url: "http://127.0.0.1:8082/api/VIM/upgrade",
+        url: api + "/VIM/upgrade",
         data: params,
         dataType: "text",
         //Attach auth header
@@ -363,7 +364,7 @@ function DowngradeVM() {
     };
     $.ajax({
         type: 'POST',
-        url: "http://127.0.0.1:8082/api/VIM/downgrade",
+        url: api + "/VIM/downgrade",
         data: params,
         dataType: "text",
         //Attach auth header
@@ -393,7 +394,7 @@ function GetUsageVM() {
     };
     $.ajax({
         type: 'GET',
-        url: "http://127.0.0.1:8082/api/VIM/usage/vm/" + vmArray[selected]._id,
+        url: api + "/VIM/usage/vm/" + vmArray[selected]._id,
         data: params,
         dataType: "text",
         //Attach auth header
@@ -429,7 +430,7 @@ function GetTotalCharges() {
     };
     $.ajax({
         type: 'GET',
-        url: "http://127.0.0.1:8082/api/VIM/usage/user/" + userID,
+        url: api + "/VIM/usage/user/" + userID,
         data: params,
         dataType: "text",
         //Attach auth header

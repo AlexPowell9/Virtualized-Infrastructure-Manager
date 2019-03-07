@@ -1,6 +1,7 @@
+let api = "http://127.0.0.1:8082/api";
 //Initialize the invalid login symbol tooltip.
 $('#loginInvalid').tooltip('update');
-$("#loginForm").submit(function(e) {
+$("#loginForm").submit(function (e) {
     e.preventDefault();
 });
 /*
@@ -20,13 +21,13 @@ function login() {
     };
     $.ajax({
         type: 'POST',
-        url: "http://127.0.0.1:8082/api/login",
+        url: api + "/login",
         data: params,
         dataType: "text",
         //If successful, pass token to dashboard
         success: function (resultData) {
             resultData = JSON.parse(resultData);
-            window.location.href = "/dashboard.html?t="+encodeURIComponent(resultData.token) + "&uid="+resultData.user + "&uname=" + username;
+            window.location.href = "/dashboard.html?t=" + encodeURIComponent(resultData.token) + "&uid=" + resultData.user + "&uname=" + username;
         },
         //If unsuccessful show error
         error: function (data) {
@@ -47,7 +48,7 @@ function register() {
     //Get username and password from form
     let username = document.getElementById("registerUsername").value;
     let password = document.getElementById("registerPassword").value;
-    if(username === '' || password === '') {
+    if (username === '' || password === '') {
         document.getElementById("invalidRegister").classList.remove("d-none");
         return;
     }
@@ -59,7 +60,7 @@ function register() {
     };
     $.ajax({
         type: 'POST',
-        url: "http://127.0.0.1:8082/api/register",
+        url: api + "/register",
         data: params,
         dataType: "text",
         //If successful, show success
