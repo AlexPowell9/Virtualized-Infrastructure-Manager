@@ -1,10 +1,10 @@
 #!/bin/bash
 
-while 1
+while true
 do
-    RESULT = $(pgrep procname)
-    if [["$result" == ""]]; then
-        mail -s "Process not running" address@domain.tld -t "The process is not running"
+    if [[ "$(pgrep node)" == "" ]]; then
+        echo "VM2 has crashed" | mail -s "VM2 down" christian-yores@hotmail.com
         break
     fi
 done
+
