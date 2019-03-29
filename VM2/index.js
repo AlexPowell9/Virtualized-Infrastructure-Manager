@@ -2,6 +2,7 @@ const config = require("./config/config");
 const express = require("express");
 var bodyParser = require('body-parser');
 const mongoose = require("mongoose");
+const request = require("request");
 
 const setupEnv = require(`./${config.SETUP_ENV_LOCATION}`);
 
@@ -20,7 +21,14 @@ let start = async ()=>{
         limit: '10mb',
         extended: true
     }));
+    app.use("/api", (req, res, next) => {
+        console.log("API request:", req.originalUrl);
+    });
     app.use("/api", require(`./${config.ROUTES_DIR}/index`));//api routes to /api
+    app.use((req, res, next) => {
+        console.log("Static request:", req.originalUrl);
+        next();
+    })
     app.use(express.static('public'));//static resources found in public
     app.listen(config.SERVER_PORT, config.functions.onServerStart);//run server
 }

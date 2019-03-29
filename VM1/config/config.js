@@ -8,6 +8,7 @@ const scrypt = require("scrypt");
 
 module.exports = {
     //constants
+    API_SERVER_IP: "http://127.0.0.1:10000",
     ROUTES_DIR: "routes",//routes location
     SETUP_ENV_LOCATION: "setup",//setup location
     SETUP_TEST_ENV_LOCATION: "testSetup",//test location
