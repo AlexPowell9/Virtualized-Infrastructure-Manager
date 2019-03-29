@@ -15,7 +15,7 @@ module.exports = {
     SERVER_PORT: 8082,//server port
     CONTROLLER_LOCATION: "controllers",//where are the controllers
     MODEL_DIR: "models",
-    dbUri: "mongodb://localhost:27017/vim",//database location
+    dbUri: "mongoose.connect('mongodb://cyores:corsair@10.0.0.6:27017/a3');",//database location
     SCRYPT_PARAMS: scrypt.paramsSync(0.1),//scrypt parameters
     //functions
     functions: {
