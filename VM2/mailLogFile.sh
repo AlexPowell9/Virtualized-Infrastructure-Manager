@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cat stdout.log | mail -s "Log file" address@domain.tld
+cat stdout.log | mail -s "Log file" acywpscr@gmail.com
