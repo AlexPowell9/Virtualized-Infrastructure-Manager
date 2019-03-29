@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "mongoose": "^5.4.16",
+    "request": "^2.88.0",
     "scrypt": "^6.0.3"
   },
   "devDependencies": {},
