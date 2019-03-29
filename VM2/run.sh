@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node index.js > ./stdout.log
+node index.js >> ./stdout.log
