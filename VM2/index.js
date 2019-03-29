@@ -24,6 +24,7 @@ let start = async ()=>{
     }));
     app.use((req, res, next) => {
         console.log("API request:", req.method ,req.originalUrl);
+        console.log(req.body);
         next();
     });
     app.use(require(`./${config.ROUTES_DIR}/index`));//api routes to /api
