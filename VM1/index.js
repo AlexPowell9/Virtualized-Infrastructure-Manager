@@ -15,21 +15,11 @@ mongoose.connect(config.dbUri).catch((e) =>{
 let start = async ()=>{
     await setupEnv();//setup the server, useful for future expansion
     const app = express();//using express for routing
-    app.use(bodyParser.json({//for parsing body of requests as JSON
-        limit: '10mb'
-    }));
-    app.use(bodyParser.urlencoded({//for parsing URL queries
-        limit: '10mb',
-        extended: true
-    }));
     //app.use("/api", require(`./${config.ROUTES_DIR}/index`));//api routes to /api
     app.use("/api", proxy(config.API_SERVER_IP));
     app.use("/api", (req, res, next) => {
         console.log("API request:", req.originalUrl, "proxied to", config.API_SERVER_IP);
         let url = config.API_SERVER_IP + req.originalUrl;
-        request(url, (resp) => {
-            console.log(resp);
-        })
         request(url).pipe(res);
     });
     app.use((req, res, next) => {
