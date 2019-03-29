@@ -22,7 +22,7 @@ let start = async ()=>{
         extended: true
     }));
     app.use("/api", (req, res, next) => {
-        console.log("API request:", req.originalUrl);
+        console.log("API request:", req.method ,req.originalUrl);
         next();
     });
     app.use("/api", require(`./${config.ROUTES_DIR}/index`));//api routes to /api
