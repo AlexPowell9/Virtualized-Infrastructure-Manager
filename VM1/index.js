@@ -25,7 +25,10 @@ let start = async ()=>{
     app.use("/api", (req, res, next) => {
         console.log("API request:", req.originalUrl, "proxied to", config.API_SERVER_IP);
         let url = config.API_SERVER_IP + req.originalUrl;
-        request(url).pipe(res);
+        //request(url).pipe(res);
+        request(url, (resp) => {
+            console.log(resp);
+        });
     });
     app.use((req, res, next) => {
         console.log("Static request:", req.originalUrl);
